@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raman Dhaliwal — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: { 900: '#080C17', 800: '#0B1120', 700: '#0F172A' },
+                        gold: { DEFAULT: '#D4AF37', light: '#E8CC6E', dark: '#B8941E' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::selection { background: #D4AF37; color: #0B1120; }
+        body { font-family: 'Inter', sans-serif; background: #080C17; color: #F8FAFC; overflow-x: hidden; }
+        .font-display { font-family: 'Playfair Display', serif; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #080C17; }
+        ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 3px; }
+
+        /* Glass */
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass-nav { background: rgba(11,17,32,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); transition: all 500ms cubic-bezier(0.16,1,0.3,1); }
+        .glass-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(212,175,55,0.3); transform: translateY(-4px); box-shadow: 0 25px 50px -12px rgba(212,175,55,0.08); }
+
+        /* Reveal Animation */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .reveal-left { opacity: 0; transform: translateX(-40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .reveal-left.active { opacity: 1; transform: translateX(0); }
+        .reveal-right { opacity: 0; transform: translateX(40px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .reveal-right.active { opacity: 1; transform: translateX(0); }
+        .reveal-scale { opacity: 0; transform: scale(0.9); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .reveal-scale.active { opacity: 1; transform: scale(1); }
+
+        /* Stagger children */
+        .stagger-children .reveal:nth-child(1) { transition-delay: 0ms; }
+        .stagger-children .reveal:nth-child(2) { transition-delay: 100ms; }
+        .stagger-children .reveal:nth-child(3) { transition-delay: 200ms; }
+        .stagger-children .reveal:nth-child(4) { transition-delay: 300ms; }
+        .stagger-children .reveal:nth-child(5) { transition-delay: 400ms; }
+        .stagger-children .reveal:nth-child(6) { transition-delay: 500ms; }
+        .stagger-children .reveal:nth-child(7) { transition-delay: 600ms; }
+        .stagger-children .reveal:nth-child(8) { transition-delay: 700ms; }
+
+        /* Hero text gradient */
+        .text-gradient { background: linear-gradient(135deg, #FFFFFF 0%, #D4AF37 50%, #E8CC6E 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .text-gradient-subtle { background: linear-gradient(to right, #FFFFFF, #94A3B8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+        /* Glow */
+        .glow-gold { box-shadow: 0 0 30px rgba(212,175,55,0.15), 0 0 60px rgba(212,175,55,0.05); }
+        .glow-dot { box-shadow: 0 0 10px rgba(212,175,55,0.5); }
+
+        /* Skill bar */
+        .skill-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+        .skill-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #D4AF37, #E8CC6E); transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(0.16,1,0.3,1); }
+        .skill-fill.active { transform: scaleX(1); }
+
+        /* Floating animation */
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        @keyframes float-delayed { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        .animate-float-delayed { animation: float-delayed 5s ease-in-out 1s infinite; }
+
+        /* Pulse ring */
+        @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.8); opacity: 0; } }
+        .pulse-ring::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid #D4AF37; animation: pulse-ring 2s ease-out infinite; }
+
+        /* Typing cursor */
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .cursor-blink { animation: blink 1s step-end infinite; }
+
+        /* Nav link underline */
+        .nav-link { position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: #D4AF37; transition: width 300ms ease; }
+        .nav-link:hover::after, .nav-link.active-link::after { width: 100%; }
+
+        /* Mobile menu */
+        .mobile-menu { transform: translateX(100%); transition: transform 400ms cubic-bezier(0.16,1,0.3,1); }
+        .mobile-menu.open { transform: translateX(0); }
+
+        /* Toast */
+        .toast { transform: translateY(100px); opacity: 0; transition: all 400ms cubic-bezier(0.16,1,0.3,1); }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* Timeline */
+        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, transparent, rgba(212,175,55,0.3), rgba(212,175,55,0.3), transparent); }
+        @media (min-width: 768px) { .timeline-line { left: 50%; transform: translateX(-1px); } }
+
+        /* Project image overlay */
+        .project-overlay { background: linear-gradient(to top, rgba(8,12,23,0.95) 0%, rgba(8,12,23,0.4) 50%, transparent 100%); }
+
+        /* Button shine */
+        .btn-shine { position: relative; overflow: hidden; }
+        .btn-shine::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(transparent, rgba(255,255,255,0.1), transparent); transform: rotate(45deg) translateX(-100%); transition: transform 600ms; }
+        .btn-shine:hover::after { transform: rotate(45deg) translateX(100%); }
+
+        /* Counter */
+        .counter { font-variant-numeric: tabular-nums; }
+    </style>
+</head>
+<body>
+
+    <!-- ============ NAVIGATION ============ -->
+    <nav id="navbar" class="glass-nav fixed top-0 left-0 right-0 z-50 h-20 lg:h-24 flex items-center transition-all duration-500">
+        <div class="max-w-7xl mx-auto w-full px-6 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center group-hover:bg-gold/20 transition-all duration-300">
+                    <span class="font-display text-gold font-semibold text-lg">R</span>
+                </div>
+                <span class="font-display text-xl text-white hidden sm:block">Raman<span class="text-gold">.</span></span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <div class="hidden lg:flex items-center gap-10">
+                <a href="#about" class="nav-link text-sm text-slate-400 hover:text-white transition-colors duration-300 tracking-wide uppercase font-medium">About</a>
+                <a href="#skills" class="nav-link text-sm text-slate-400 hover:text-white transition-colors duration-300 tracking-wide uppercase font-medium">Skills</a>
+                <a href="#projects" class="nav-link text-sm text-slate-400 hover:text-white transition-colors duration-300 tracking-wide uppercase font-medium">Projects</a>
+                <a href="#education" class="nav-link text-sm text-slate-400 hover:text-white transition-colors duration-300 tracking-wide uppercase font-medium">Education</a>
+                <a href="#contact" class="btn-shine bg-gold text-dark-900 px-6 py-2.5 rounded-full text-sm font-semibold uppercase tracking-widest hover:bg-gold-light hover:scale-105 transition-all duration-300">Contact</a>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button id="menuToggle" class="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 group" aria-label="Toggle Menu">
+                <span class="menu-line w-6 h-0.5 bg-white rounded transition-all duration-300 origin-center"></span>
+                <span class="menu-line w-6 h-0.5 bg-white rounded transition-all duration-300"></span>
+                <span class="menu-line w-4 h-0.5 bg-white rounded transition-all duration-300 origin-center group-hover:w-6"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu fixed inset-0 z-40 bg-dark-900/98 backdrop-blur-xl flex flex-col items-center justify-center gap-8">
+        <a href="#about" class="mobile-nav-link text-2xl font-display text-slate-300 hover:text-gold transition-colors duration-300">About</a>
+        <a href="#skills" class="mobile-nav-link text-2xl font-display text-slate-300 hover:text-gold transition-colors duration-300">Skills</a>
+        <a href="#projects" class="mobile-nav-link text-2xl font-display text-slate-300 hover:text-gold transition-colors duration-300">Projects</a>
+        <a href="#education" class="mobile-nav-link text-2xl font-display text-slate-300 hover:text-gold transition-colors duration-300">Education</a>
+        <a href="#contact" class="mobile-nav-link mt-4 btn-shine bg-gold text-dark-900 px-10 py-3 rounded-full text-lg font-semibold uppercase tracking-widest">Contact</a>
+    </div>
+
+    <!-- ============ HERO ============ -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <!-- Background Image -->
+        <div class="absolute inset-0">
+            <img src="https://picsum.photos/seed/raman-hero-dark/1920/1080.jpg" alt="" class="w-full h-full object-cover opacity-20 scale-105">
+            <div class="absolute inset-0 bg-gradient-to-b from-dark-900/60 via-dark-900/80 to-dark-900"></div>
+        </div>
+
+        <!-- Decorative Elements -->
+        <div class="absolute top-1/4 left-10 w-72 h-72 bg-gold/5 rounded-full blur-[100px] animate-float"></div>
+        <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-gold/3 rounded-full blur-[120px] animate-float-delayed"></div>
+        <div class="absolute top-20 right-1/4 w-1.5 h-1.5 bg-gold rounded-full glow-dot animate-float"></div>
+        <div class="absolute bottom-40 left-1/3 w-1 h-1 bg-gold/60 rounded-full animate-float-delayed"></div>
+        <div class="absolute top-1/3 right-10 w-0.5 h-0.5 bg-gold/40 rounded-full animate-float"></div>
+
+        <!-- Content -->
+        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
+            <div class="reveal mb-6">
+                <span class="inline-flex items-center gap-2 glass px-5 py-2 rounded-full text-xs font-medium uppercase tracking-[0.2em] text-gold">
+                    <span class="w-2 h-2 bg-gold rounded-full glow-dot"></span>
+                    COPA Student • ITI Ropar
+                </span>
+            </div>
+
+            <h1 class="reveal font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-tight leading-[1.05] mb-6" style="transition-delay:100ms">
+                <span class="text-gradient">Raman</span><br>
+                <span class="text-white">Dhaliwal</span>
+            </h1>
+
+            <p class="reveal text-lg md:text-xl text-slate-400 font-light max-w-2xl mx-auto mb-4 leading-relaxed" style="transition-delay:200ms">
+                Aspiring <span class="text-white font-normal">Computer Operator</span> & <span class="text-white font-normal">Programming Assistant</span> crafting digital experiences with clean code and creative design.
+            </p>
+
+            <div class="reveal h-7 mb-10" style="transition-delay:250ms">
+                <span id="typingText" class="text-gold font-mono text-sm"></span>
+                <span class="cursor-blink text-gold font-mono text-sm">|</span>
+            </div>
+
+            <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4" style="transition-delay:300ms">
+                <a href="#projects" class="btn-shine bg-gold text-dark-900 px-10 py-4 rounded-full text-sm font-semibold uppercase tracking-[0.15em] hover:bg-gold-light hover:scale-105 transition-all duration-300 glow-gold flex items-center gap-2">
+                    View My Work <i class="bi bi-arrow-right text-base"></i>
+                </a>
+                <a href="#contact" class="glass px-10 py-4 rounded-full text-sm font-medium uppercase tracking-[0.15em] text-slate-300 hover:text-white hover:border-gold/30 transition-all duration-300 flex items-center gap-2">
+                    <i class="bi bi-chat-dots text-base text-gold"></i> Let's Talk
+                </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="reveal mt-16 grid grid-cols-3 gap-8 max-w-md mx-auto" style="transition-delay:400ms">
+                <div class="text-center">
+                    <div class="text-2xl md:text-3xl font-display text-white counter" data-target="5">0</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-wider mt-1">Projects</div>
+                </div>
+                <div class="text-center border-x border-white/10">
+                    <div class="text-2xl md:text-3xl font-display text-white counter" data-target="10">0</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-wider mt-1">Skills</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl md:text-3xl font-display text-white counter" data-target="1">0</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-wider mt-1">Year Exp</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 reveal" style="transition-delay:500ms">
+            <span class="text-xs text-slate-500 uppercase tracking-[0.2em]">Scroll</span>
+            <div class="w-5 h-8 border border-slate-600 rounded-full flex justify-center pt-1.5">
+                <div class="w-1 h-2 bg-gold rounded-full animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ ABOUT ME ============ -->
+    <section id="about" class="relative py-32 px-6">
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="text-center mb-20">
+                <span class="reveal inline-block text-xs font-medium uppercase tracking-[0.2em] text-gold mb-4">Get to Know Me</span>
+                <h2 class="reveal font-display text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-gradient-subtle" style="transition-delay:100ms">About Me</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
+                <!-- Image -->
+                <div class="reveal-left relative">
+                    <div class="relative rounded-2xl overflow-hidden aspect-[4/5] max-w-md mx-auto lg:mx-0">
+                        <img src="https://picsum.photos/seed/raman-portrait-pro/600/750.jpg" alt="Raman Dhaliwal" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900/60 via-transparent to-transparent"></div>
+                    </div>
+                    <!-- Floating card -->
+                    <div class="absolute -bottom-6 -right-4 md:right-auto md:-left-6 glass rounded-xl p-4 glow-gold animate-float">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center">
+                                <i class="bi bi-laptop text-gold text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-white font-semibold text-sm">COPA Trade</div>
+                                <div class="text-slate-400 text-xs">ITI Certified</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative border -->
+                    <div class="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-gold/30 rounded-tl-2xl"></div>
+                    <div class="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 border-gold/30 rounded-br-2xl hidden md:block"></div>
+                </div>
+
+                <!-- Content -->
+                <div class="reveal-right">
+                    <h3 class="font-display text-2xl md:text-3xl text-white mb-6 leading-snug">
+                        Passionate about <span class="text-gold">technology</span> and building meaningful digital solutions.
+                    </h3>
+                    <p class="text-slate-400 font-light leading-relaxed mb-6">
+                        Hello! I'm Raman Dhaliwal, a dedicated COPA (Computer Operator and Programming Assistant) student at Government Women ITI Ropar. I'm passionate about learning new technologies and applying them to create practical, user-friendly digital solutions.
+                    </p>
+                    <p class="text-slate-400 font-light leading-relaxed mb-8">
+                        From mastering office productivity tools to writing clean code in HTML, CSS, and programming languages like C and Python, I'm constantly expanding my skill set. My goal is to become a proficient IT professional who can contribute meaningfully to any organization.
+                    </p>
+
+                    <!-- Info Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-person text-gold text-lg"></i>
+                            <div>
+                                <div class="text-xs text-slate-500 uppercase tracking-wider">Name</div>
+                                <div class="text-white text-sm font-medium">Raman Dhaliwal</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-geo-alt text-gold text-lg"></i>
+                            <div>
+                                <div class="text-xs text-slate-500 uppercase tracking-wider">Location</div>
+                                <div class="text-white text-sm font-medium">Ropar, Punjab</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-book text-gold text-lg"></i>
+                            <div>
+                                <div class="text-xs text-slate-500 uppercase tracking-wider">Course</div>
+                                <div class="text-white text-sm font-medium">COPA (ITI)</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="bi bi-translate text-gold text-lg"></i>
+                            <div>
+                                <div class="text-xs text-slate-500 uppercase tracking-wider">Languages</div>
+                                <div class="text-white text-sm font-medium">Punjabi, Hindi, English</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#contact" class="btn-shine inline-flex items-center gap-2 bg-gold text-dark-900 px-8 py-3.5 rounded-full text-sm font-semibold uppercase tracking-[0.15em] hover:bg-gold-light hover:scale-105 transition-all duration-300">
+                        <i class="bi bi-download"></i> Download Resume
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SKILLS ============ -->
+    <section id="skills" class="relative py-32 px-6 bg-dark-800/50">
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="text-center mb-20">
+                <span class="reveal inline-block text-xs font-medium uppercase tracking-[0.2em] text-gold mb-4">What I Know</span>
+                <h2 class="reveal font-display text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-gradient-subtle" style="transition-delay:100ms">My Skills</h2>
+                <p class="reveal text-slate-400 font-light mt-4 max-w-xl mx-auto" style="transition-delay:200ms">Technologies and tools I've learned during my COPA training and self-study.</p>
+            </div>
+
+            <!-- Skill Categories -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
+
+                <!-- Programming -->
+                <div class="reveal glass-card rounded-2xl p-8 group">
+                    <div class="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold/20 transition-colors duration-300">
+                        <i class="bi bi-code-slash text-gold text-2xl"></i>
+                    </div>
+                    <h3 class="font-display text-xl text-white mb-2">Programming</h3>
+                    <p class="text-slate-500 text-sm mb-6">Core programming languages for logic building and development.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">HTML</span><span class="text-gold">90%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">CSS</span><span class="text-gold">85%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">C Language</span><span class="text-gold">75%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">Python</span><span class="text-gold">65%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Office Suite -->
+                <div class="reveal glass-card rounded-2xl p-8 group">
+                    <div class="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold/20 transition-colors duration-300">
+                        <i class="bi bi-file-earmark-spreadsheet text-gold text-2xl"></i>
+                    </div>
+                    <h3 class="font-display text-xl text-white mb-2">MS Office Suite</h3>
+                    <p class="text-slate-500 text-sm mb-6">Professional document, spreadsheet, and presentation management.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">MS Word</span><span class="text-gold">95%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">MS Excel</span><span class="text-gold">90%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">MS PowerPoint</span><span class="text-gold">88%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">MS Access</span><span class="text-gold">70%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Skills -->
+                <div class="reveal glass-card rounded-2xl p-8 group">
+                    <div class="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center mb-6 group-hover:bg-gold/20 transition-colors duration-300">
+                        <i class="bi bi-tools text-gold text-2xl"></i>
+                    </div>
+                    <h3 class="font-display text-xl text-white mb-2">Tools & Others</h3>
+                    <p class="text-slate-500 text-sm mb-6">Essential tools and additional skills for a well-rounded profile.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">Tally Prime</span><span class="text-gold">80%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">Internet & Email</span><span class="text-gold">92%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:92%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">Typing (Hindi/Eng)</span><span class="text-gold">85%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5"><span class="text-slate-300">Windows OS</span><span class="text-gold">88%</span></div>
+                            <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tech Tags -->
+            <div class="reveal mt-16 flex flex-wrap justify-center gap-3" style="transition-delay:300ms">
+                <span class="glass px-4 py-2 rounded-full text-xs text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 cursor-default"><i class="bi bi-filetype-html mr-1.5 text-gold/60"></i>HTML5</span>
+                <span class="glass px-4 py-2 rounded-full text-xs text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 cursor-default"><i class="bi bi-filetype-css mr-1.5 text-gold/60"></i>CSS3</span>
+                <span class="glass px-4 py-2 rounded-full text-xs text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 cursor-default"><i class="bi bi-filetype-py mr-1.5 text-gold/60"></i>Python</span>
+                <span class="glass px-4 py-2 rounded-full text-xs text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 cursor-default"><i class="bi bi-filetype-c mr-1.5 text-gold/60"></i>C</span>
+                <span class="glass px-4 py-2 rounded-full text-xs text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 cursor-default"><i class="bi bi-table mr-1.5 text-gold/60"></i>Excel</span>
+                <span class="glass px-4 py-2 rounded-full text-xs text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 cursor-default"><i class="bi bi-file-earmark-word mr-1.5 text-gold/60"></i>Word</span>
+                <span class="glass px-4 py-2 rounded-full text-xs text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 cursor-default"><i class="bi bi-easel mr-1.5 text-gold/60"></i>PowerPoint</span>
+                <span class="glass px-4 py-2 rounded-full text-xs text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 cursor-default"><i class="bi bi-calculator mr-1.5 text-gold/60"></i>Tally</span>
+                <span class="glass px-4 py-2 rounded-full text-xs text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 cursor-default"><i class="bi bi-database mr-1.5 text-gold/60"></i>MS Access</span>
+                <span class="glass px-4 py-2 rounded-full text-xs text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 cursor-default"><i class="bi bi-globe mr-1.5 text-gold/60"></i>Internet</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects" class="relative py-32 px-6">
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="text-center mb-20">
+                <span class="reveal inline-block text-xs font-medium uppercase tracking-[0.2em] text-gold mb-4">My Work</span>
+                <h2 class="reveal font-display text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-gradient-subtle" style="transition-delay:100ms">Projects</h2>
+                <p class="reveal text-slate-400 font-light mt-4 max-w-xl mx-auto" style="transition-delay:200ms">A showcase of projects I've built during my COPA training and personal learning.</p>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
+
+                <!-- Project 1 -->
+                <div class="reveal glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://picsum.photos/seed/raman-proj-portfolio/600/340.jpg" alt="Portfolio Website" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="project-overlay absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                            <div class="flex gap-3">
+                                <a href="#" class="w-10 h-10 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300"><i class="bi bi-box-arrow-up-right"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300"><i class="bi bi-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">HTML</span>
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">CSS</span>
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">JS</span>
+                        </div>
+                        <h3 class="font-display text-lg text-white mb-2 group-hover:text-gold transition-colors duration-300">Portfolio Website</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">A responsive personal portfolio built with modern CSS techniques, smooth animations, and clean layout structure.</p>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="reveal glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://picsum.photos/seed/raman-proj-calculator/600/340.jpg" alt="Calculator App" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="project-overlay absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                            <div class="flex gap-3">
+                                <a href="#" class="w-10 h-10 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300"><i class="bi bi-box-arrow-up-right"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300"><i class="bi bi-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">HTML</span>
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">CSS</span>
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">JavaScript</span>
+                        </div>
+                        <h3 class="font-display text-lg text-white mb-2 group-hover:text-gold transition-colors duration-300">Scientific Calculator</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">A fully functional scientific calculator with basic and advanced operations, keyboard support, and a sleek interface.</p>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="reveal glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://picsum.photos/seed/raman-proj-todo/600/340.jpg" alt="Todo App" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="project-overlay absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                            <div class="flex gap-3">
+                                <a href="#" class="w-10 h-10 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300"><i class="bi bi-box-arrow-up-right"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300"><i class="bi bi-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">Python</span>
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">Tkinter</span>
+                        </div>
+                        <h3 class="font-display text-lg text-white mb-2 group-hover:text-gold transition-colors duration-300">Task Manager App</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">A desktop task management application built with Python and Tkinter featuring add, edit, delete, and mark complete functionality.</p>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="reveal glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://picsum.photos/seed/raman-proj-excel/600/340.jpg" alt="Excel Dashboard" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="project-overlay absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                            <div class="flex gap-3">
+                                <a href="#" class="w-10 h-10 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300"><i class="bi bi-box-arrow-up-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">Excel</span>
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">VBA</span>
+                        </div>
+                        <h3 class="font-display text-lg text-white mb-2 group-hover:text-gold transition-colors duration-300">Student Report Dashboard</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">An automated Excel dashboard for managing student marks, generating reports, charts, and grade summaries using formulas and macros.</p>
+                    </div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="reveal glass-card rounded-2xl overflow-hidden group">
+                    <div class="relative aspect-video overflow-hidden">
+                        <img src="https://picsum.photos/seed/raman-proj-landing/600/340.jpg" alt="Landing Page" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="project-overlay absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                            <div class="flex gap-3">
+                                <a href="#" class="w-10 h-10 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300"><i class="bi bi-box-arrow-up-right"></i></a>
+                                <a href="#" class="w-10 h-10 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300"><i class="bi bi-github"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">HTML</span>
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">CSS</span>
+                            <span class="text-[10px] uppercase tracking-wider text-gold bg-gold/10 px-2.5 py-1 rounded-full">Bootstrap</span>
+                        </div>
+                        <h3 class="font-display text-lg text-white mb-2 group-hover:text-gold transition-colors duration-300">Business Landing Page</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">A modern, responsive landing page designed for a small business with testimonial sections, services, and contact form.</p>
+                    </div>
+                </div>
+
+                <!-- Project 6 - CTA Card -->
+                <div class="reveal glass-card rounded-2xl overflow-hidden flex flex-col items-center justify-center p-8 text-center border-dashed border-white/10 hover:border-gold/30">
+                    <div class="w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center mb-6">
+                        <i class="bi bi-plus-lg text-gold text-2xl"></i>
+                    </div>
+                    <h3 class="font-display text-xl text-white mb-2">More Coming</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-6">I'm continuously learning and building. Stay tuned for more exciting projects!</p>
+                    <a href="#contact" class="text-gold text-sm font-medium hover:text-gold-light transition-colors duration-300 flex items-center gap-1">
+                        Suggest a Project <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ EDUCATION ============ -->
+    <section id="education" class="relative py-32 px-6 bg-dark-800/50">
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto">
+            <!-- Section Header -->
+            <div class="text-center mb-20">
+                <span class="reveal inline-block text-xs font-medium uppercase tracking-[0.2em] text-gold mb-4">My Journey</span>
+                <h2 class="reveal font-display text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-gradient-subtle" style="transition-delay:100ms">Education</h2>
+            </div>
+
+            <!-- Timeline -->
+            <div class="relative max-w-4xl mx-auto">
+                <div class="timeline-line"></div>
+
+                <!-- Item 1 -->
+                <div class="reveal relative pl-14 md:pl-0 mb-16">
+                    <!-- Dot -->
+                    <div class="absolute left-[14px] md:left-1/2 md:-translate-x-1/2 top-1 w-3.5 h-3.5 bg-gold rounded-full glow-dot z-10 pulse-ring"></div>
+                    <!-- Content -->
+                    <div class="md:w-1/2 md:pr-16 md:text-right">
+                        <span class="inline-block text-xs font-medium uppercase tracking-[0.15em] text-gold bg-gold/10 px-3 py-1 rounded-full mb-3">2024 — Present</span>
+                        <h3 class="font-display text-xl md:text-2xl text-white mb-2">COPA (Computer Operator & Programming Assistant)</h3>
+                        <p class="text-gold/80 text-sm font-medium mb-3">Government Women ITI, Ropar</p>
+                        <p class="text-slate-400 text-sm leading-relaxed">Pursuing a comprehensive ITI program covering computer fundamentals, MS Office suite, programming in C & HTML/CSS, database management with MS Access, Tally accounting, and internet applications. Gaining hands-on practical training in all modules.</p>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="reveal relative pl-14 md:pl-0 mb-16" style="transition-delay:100ms">
+                    <div class="absolute left-[14px] md:left-1/2 md:-translate-x-1/2 top-1 w-3.5 h-3.5 bg-gold/60 rounded-full z-10"></div>
+                    <div class="md:w-1/2 md:ml-auto md:pl-16">
+                        <span class="inline-block text-xs font-medium uppercase tracking-[0.15em] text-gold bg-gold/10 px-3 py-1 rounded-full mb-3">2022 — 2024</span>
+                        <h3 class="font-display text-xl md:text-2xl text-white mb-2">Senior Secondary (12th)</h3>
+                        <p class="text-gold/80 text-sm font-medium mb-3">Board of School Education, Punjab</p>
+                        <p class="text-slate-400 text-sm leading-relaxed">Completed senior secondary education with a focus on building a strong academic foundation. Developed interest in computer science and technology during this period.</p>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="reveal relative pl-14 md:pl-0 mb-16" style="transition-delay:200ms">
+                    <div class="absolute left-[14px] md:left-1/2 md:-translate-x-1/2 top-1 w-3.5 h-3.5 bg-gold/40 rounded-full z-10"></div>
+                    <div class="md:w-1/2 md:pr-16 md:text-right">
+                        <span class="inline-block text-xs font-medium uppercase tracking-[0.15em] text-gold bg-gold/10 px-3 py-1 rounded-full mb-3">2020 — 2022</span>
+                        <h3 class="font-display text-xl md:text-2xl text-white mb-2">Matriculation (10th)</h3>
+                        <p class="text-gold/80 text-sm font-medium mb-3">Board of School Education, Punjab</p>
+                        <p class="text-slate-400 text-sm leading-relaxed">Completed matriculation with good academic performance. First exposure to basic computer concepts and applications that sparked my interest in the IT field.</p>
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                <div class="reveal relative pl-14 md:pl-0" style="transition-delay:300ms">
+                    <div class="absolute left-[14px] md:left-1/2 md:-translate-x-1/2 top-1 w-3.5 h-3.5 bg-gold/30 rounded-full z-10"></div>
+                    <div class="md:w-1/2 md:ml-auto md:pl-16">
+                        <span class="inline-block text-xs font-medium uppercase tracking-[0.15em] text-gold bg-gold/10 px-3 py-1 rounded-full mb-3">Ongoing</span>
+                        <h3 class="font-display text-xl md:text-2xl text-white mb-2">Certifications & Courses</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4">Additional online courses and certifications to supplement my ITI training.</p>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 md:justify-start">
+                                <i class="bi bi-patch-check-fill text-gold text-sm"></i>
+                                <span class="text-slate-300 text-sm">HTML & CSS Fundamentals — Online Course</span>
+                            </div>
+                            <div class="flex items-center gap-3 md:justify-start">
+                                <i class="bi bi-patch-check-fill text-gold text-sm"></i>
+                                <span class="text-slate-300 text-sm">Python Basics — Self-Study</span>
+                            </div>
+                            <div class="flex items-center gap-3 md:justify-start">
+                                <i class="bi bi-patch-check-fill text-gold/50 text-sm"></i>
+                                <span class="text-slate-500 text-sm">Digital Literacy — In Progress</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="relative py-32 px-6">
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+
+        <!-- Background glow -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[150px]"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <!-- Section Header -->
+            <div class="text-center mb-20">
+                <span class="reveal inline-block text-xs font-medium uppercase tracking-[0.2em] text-gold mb-4">Get In Touch</span>
+                <h2 class="reveal font-display text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight text-gradient-subtle" style="transition-delay:100ms">Contact Me</h2>
+                <p class="reveal text-slate-400 font-light mt-4 max-w-xl mx-auto" style="transition-delay:200ms">Have a question or want to work together? I'd love to hear from you.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-5 gap-12 lg:gap-16">
+                <!-- Contact Info -->
+                <div class="lg:col-span-2 space-y-8 reveal-left">
+                    <div class="glass-card rounded-2xl p-6 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-envelope text-gold text-lg"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Email</div>
+                            <a href="mailto:raman.dhaliwal@email.com" class="text-white text-sm hover:text-gold transition-colors duration-300 break-all">raman.dhaliwal@email.com</a>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-phone text-gold text-lg"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Phone</div>
+                            <a href="tel:+919876543210" class="text-white text-sm hover:text-gold transition-colors duration-300">+91 98765 43210</a>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6 flex items-start gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center flex-shrink-0">
+                            <i class="bi bi-geo-alt text-gold text-lg"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-500 uppercase tracking-wider mb-1">Location</div>
+                            <p class="text-white text-sm">Government Women ITI, Ropar, Punjab, India</p>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="pt-4">
+                        <div class="text-xs text-slate-500 uppercase tracking-wider mb-4">Follow Me</div>
+                        <div class="flex gap-3">
+                            <a href="#" class="w-11 h-11 rounded-full glass flex items-center justify-center text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 hover:scale-110">
+                                <i class="bi bi-linkedin text-lg"></i>
+                            </a>
+                            <a href="#" class="w-11 h-11 rounded-full glass flex items-center justify-center text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 hover:scale-110">
+                                <i class="bi bi-github text-lg"></i>
+                            </a>
+                            <a href="#" class="w-11 h-11 rounded-full glass flex items-center justify-center text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 hover:scale-110">
+                                <i class="bi bi-instagram text-lg"></i>
+                            </a>
+                            <a href="#" class="w-11 h-11 rounded-full glass flex items-center justify-center text-slate-400 hover:text-gold hover:border-gold/30 transition-all duration-300 hover:scale-110">
+                                <i class="bi bi-twitter-x text-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-3 reveal-right">
+                    <form id="contactForm" class="glass-card rounded-2xl p-8 md:p-10 space-y-6">
+                        <div class="grid sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Your Name</label>
+                                <input type="text" id="formName" required placeholder="John Doe" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Your Email</label>
+                                <input type="email" id="formEmail" required placeholder="john@example.com" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Subject</label>
+                            <input type="text" id="formSubject" required placeholder="How can I help you?" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300">
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Message</label>
+                            <textarea id="formMessage" required rows="5" placeholder="Write your message here..." class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300 resize-none"></textarea>
+                        </div>
+                        <button type="submit" id="submitBtn" class="btn-shine w-full bg-gold text-dark-900 py-4 rounded-xl text-sm font-semibold uppercase tracking-[0.15em] hover:bg-gold-light transition-all duration-300 flex items-center justify-center gap-2">
+                            <span id="btnText">Send Message</span>
+                            <i class="bi bi-send" id="btnIcon"></i>
+                            <div id="btnSpinner" class="hidden w-5 h-5 border-2 border-dark-900/30 border-t-dark-900 rounded-full animate-spin"></div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="relative py-12 px-6 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center">
+                        <span class="font-display text-gold font-semibold text-sm">R</span>
+                    </div>
+                    <span class="font-display text-lg text-white">Raman Dhaliwal</span>
+                </div>
+
+                <!-- Links -->
+                <div class="flex items-center gap-8">
+                    <a href="#about" class="text-sm text-slate-500 hover:text-gold transition-colors duration-300">About</a>
+                    <a href="#skills" class="text-sm text-slate-500 hover:text-gold transition-colors duration-300">Skills</a>
+                    <a href="#projects" class="text-sm text-slate-500 hover:text-gold transition-colors duration-300">Projects</a>
+                    <a href="#contact" class="text-sm text-slate-500 hover:text-gold transition-colors duration-300">Contact</a>
+                </div>
+
+                <!-- Copyright -->
+                <p class="text-xs text-slate-600">
+                    &copy; <span id="currentYear"></span> Raman Dhaliwal. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============ TOAST NOTIFICATION ============ -->
+    <div id="toast" class="toast fixed bottom-8 right-8 z-50 glass rounded-xl p-4 flex items-center gap-3 max-w-sm">
+        <div id="toastIcon" class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0">
+            <i class="bi bi-check-circle-fill text-green-400 text-lg"></i>
+        </div>
+        <div>
+            <div id="toastTitle" class="text-white text-sm font-medium">Success!</div>
+            <div id="toastMessage" class="text-slate-400 text-xs">Your message has been sent.</div>
+        </div>
+    </div>
+
+    <!-- ============ BACK TO TOP ============ -->
+    <button id="backToTop" class="fixed bottom-8 left-8 z-50 w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300 opacity-0 translate-y-4 pointer-events-none" aria-label="Back to top">
+        <i class="bi bi-arrow-up text-lg"></i>
+    </button>
+
+
+    <!-- ============ JAVASCRIPT ============ -->
+    <script>
+        // ---- Year ----
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // ---- Typing Animation ----
+        const typingPhrases = [
+            'print("Hello, World!")',
+            '<h1>Welcome to my portfolio</h1>',
+            'SELECT * FROM skills WHERE passion = true;',
+            'cout << "Let\'s build something amazing";',
+            'def dream(): return "IT Professional"'
+        ];
+        let phraseIndex = 0, charIndex = 0, isDeleting = false;
+        const typingEl = document.getElementById('typingText');
+
+        function typeEffect() {
+            const current = typingPhrases[phraseIndex];
+            if (isDeleting) {
+                typingEl.textContent = current.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingEl.textContent = current.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let delay = isDeleting ? 30 : 60;
+
+            if (!isDeleting && charIndex === current.length) {
+                delay = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % typingPhrases.length;
+                delay = 500;
+            }
+            setTimeout(typeEffect, delay);
+        }
+        typeEffect();
+
+        // ---- Scroll Reveal ----
+        const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+        const skillFills = document.querySelectorAll('.skill-fill');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        const skillObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        skillFills.forEach(el => skillObserver.observe(el));
+
+        // ---- Counter Animation ----
+        const counters = document.querySelectorAll('.counter');
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.dataset.target);
+                    let current = 0;
+                    const increment = target / 40;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            el.textContent = target + '+';
+                            clearInterval(timer);
+                        } else {
+                            el.textContent = Math.ceil(current);
+                        }
+                    }, 50);
+                    counterObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        counters.forEach(c => counterObserver.observe(c));
+
+        // ---- Navbar Scroll Effect ----
+        const navbar = document.getElementById('navbar');
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > 100) {
+                navbar.style.boxShadow = '0 4px 30px rgba(0,0,0,0.3)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+            lastScroll = currentScroll;
+        });
+
+        // ---- Active Nav Link ----
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 150;
+                if (pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active-link');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active-link');
+                }
+            });
+        });
+
+        // ---- Mobile Menu ----
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+        const menuLines = document.querySelectorAll('.menu-line');
+        let menuOpen = false;
+
+        function toggleMenu() {
+            menuOpen = !menuOpen;
+            mobileMenu.classList.toggle('open');
+            document.body.style.overflow = menuOpen ? 'hidden' : '';
+
+            if (menuOpen) {
+                menuLines[0].style.transform = 'rotate(45deg) translate(4px, 4px)';
+                menuLines[1].style.opacity = '0';
+                menuLines[2].style.transform = 'rotate(-45deg) translate(4px, -4px)';
+                menuLines[2].style.width = '1.5rem';
+            } else {
+                menuLines[0].style.transform = '';
+                menuLines[1].style.opacity = '1';
+                menuLines[2].style.transform = '';
+                menuLines[2].style.width = '';
+            }
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (menuOpen) toggleMenu();
+            });
+        });
+
+        // ---- Back to Top ----
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 600) {
+                backToTop.style.opacity = '1';
+                backToTop.style.transform = 'translateY(0)';
+                backToTop.style.pointerEvents = 'auto';
+            } else {
+                backToTop.style.opacity = '0';
+                backToTop.style.transform = 'translateY(16px)';
+                backToTop.style.pointerEvents = 'none';
+            }
+        });
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ---- Contact Form ----
+        const contactForm = document.getElementById('contactForm');
+        const btnText = document.getElementById('btnText');
+        const btnIcon = document.getElementById('btnIcon');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const submitBtn = document.getElementById('submitBtn');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('formName').value.trim();
+            const email = document.getElementById('formEmail').value.trim();
+            const subject = document.getElementById('formSubject').value.trim();
+            const message = document.getElementById('formMessage').value.trim();
+
+            if (!name || !email || !subject || !message) {
+                showToast('Error', 'Please fill in all fields.', 'error');
+                return;
+            }
+
+            // Simulate sending
+            btnText.textContent = 'Sending...';
+            btnIcon.classList.add('hidden');
+            btnSpinner.classList.remove('hidden');
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.7';
+
+            setTimeout(() => {
+                btnText.textContent = 'Send Message';
+                btnIcon.classList.remove('hidden');
+                btnSpinner.classList.add('hidden');
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                contactForm.reset();
+                showToast('Message Sent!', `Thanks ${name}, I'll get back to you soon.`, 'success');
+            }, 2000);
+        });
+
+        // ---- Toast ----
+        function showToast(title, message, type) {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+
+            if (type === 'error') {
+                toastIcon.className = 'w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0';
+                toastIcon.innerHTML = '<i class="bi bi-exclamation-circle-fill text-red-400 text-lg"></i>';
+            } else {
+                toastIcon.className = 'w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0';
+                toastIcon.innerHTML = '<i class="bi bi-check-circle-fill text-green-400 text-lg"></i>';
+            }
+
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        // ---- Smooth scroll for Safari ----
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
