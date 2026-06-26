@@ -1,0 +1,2712 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MindQuest — Play. Learn. Grow.</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        display: ['Fredoka', 'sans-serif'],
+        body: ['Space Grotesk', 'sans-serif'],
+      },
+      colors: {
+        brand: {
+          dark: '#0a0e27',
+          darker: '#060919',
+          blue: '#1e3a8a',
+          purple: '#7c3aed',
+          cyan: '#06b6d4',
+          pink: '#ec4899',
+          gold: '#f59e0b',
+          green: '#10b981',
+          red: '#ef4444',
+        }
+      }
+    }
+  }
+}
+</script>
+<style>
+  :root {
+    --bg: #0a0e27;
+    --bg2: #111538;
+    --card: rgba(30, 58, 138, 0.15);
+    --card-border: rgba(124, 58, 237, 0.25);
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --accent: #06b6d4;
+    --accent2: #7c3aed;
+    --glass: rgba(255,255,255,0.05);
+  }
+  .light-mode {
+    --bg: #f0f4ff;
+    --bg2: #e0e7ff;
+    --card: rgba(255,255,255,0.7);
+    --card-border: rgba(124, 58, 237, 0.15);
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --glass: rgba(255,255,255,0.5);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .font-display { font-family: 'Fredoka', sans-serif; }
+
+  /* 滚动条 */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 4px; }
+
+  /* 玻璃态卡片 */
+  .glass {
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+  }
+  .glass-sm {
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+  }
+  .glass-strong {
+    background: rgba(10, 14, 39, 0.85);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: 24px;
+  }
+  .light-mode .glass-strong {
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  /* 背景动效 */
+  .bg-orbs {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  }
+  .bg-orbs .orb {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3;
+    animation: orbFloat 20s ease-in-out infinite alternate;
+  }
+  .bg-orbs .orb:nth-child(1) {
+    width: 400px; height: 400px; background: #7c3aed;
+    top: -100px; left: -100px; animation-delay: 0s;
+  }
+  .bg-orbs .orb:nth-child(2) {
+    width: 350px; height: 350px; background: #06b6d4;
+    bottom: -80px; right: -80px; animation-delay: -7s;
+  }
+  .bg-orbs .orb:nth-child(3) {
+    width: 250px; height: 250px; background: #ec4899;
+    top: 40%; left: 60%; animation-delay: -14s; opacity: 0.15;
+  }
+  @keyframes orbFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -40px) scale(1.1); }
+    66% { transform: translate(-20px, 30px) scale(0.9); }
+    100% { transform: translate(10px, -10px) scale(1.05); }
+  }
+
+  /* 粒子 */
+  .particles {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  }
+  .particle {
+    position: absolute; width: 3px; height: 3px; background: var(--accent);
+    border-radius: 50%; opacity: 0.4;
+    animation: particleDrift linear infinite;
+  }
+  @keyframes particleDrift {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* 页面过渡 */
+  .page-enter { animation: pageIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .page-exit { animation: pageOut 0.3s cubic-bezier(0.55, 0, 1, 0.45) forwards; }
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes pageOut {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to { opacity: 0; transform: translateY(-20px) scale(0.97); }
+  }
+
+  /* 按钮效果 */
+  .btn-glow {
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .btn-glow::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(124,58,237,0.2));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .btn-glow:hover::after, .btn-glow:active::after { opacity: 1; }
+  .btn-glow:active { transform: scale(0.96); }
+
+  /* 卡片悬浮 */
+  .card-hover {
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-hover:hover, .card-hover:active {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(124, 58, 237, 0.15), 0 0 0 1px rgba(6,182,212,0.2);
+  }
+
+  /* 进度条动画 */
+  .progress-fill {
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* 脉冲 */
+  .pulse-glow {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(6,182,212,0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(6,182,212,0); }
+  }
+
+  /* 旋转轮盘 */
+  .spin-wheel {
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+  }
+
+  /* 记忆卡片翻转 */
+  .memory-card { perspective: 600px; }
+  .memory-card-inner {
+    transition: transform 0.5s ease;
+    transform-style: preserve-3d;
+  }
+  .memory-card.flipped .memory-card-inner { transform: rotateY(180deg); }
+  .memory-card-front, .memory-card-back {
+    backface-visibility: hidden;
+    position: absolute; inset: 0; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .memory-card-back { transform: rotateY(180deg); }
+
+  /* 拖拽 */
+  .drag-item {
+    cursor: grab; user-select: none; touch-action: none;
+  }
+  .drag-item:active { cursor: grabbing; }
+  .drag-over {
+    border-color: var(--accent) !important;
+    background: rgba(6, 182, 212, 0.1) !important;
+  }
+
+  /* 底部导航 */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+    padding: 8px 12px; padding-bottom: max(8px, env(safe-area-inset-bottom));
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    padding: 6px 12px; border-radius: 14px;
+    transition: all 0.3s ease; color: var(--text-muted);
+    font-size: 10px; font-weight: 500; cursor: pointer;
+    position: relative;
+  }
+  .nav-item.active {
+    color: var(--accent);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .nav-item.active::before {
+    content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+    width: 20px; height: 3px; background: var(--accent); border-radius: 3px;
+  }
+  .nav-item i { font-size: 20px; margin-bottom: 1px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+    z-index: 999; padding: 14px 24px; border-radius: 16px;
+    font-weight: 500; font-size: 14px;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 90vw; text-align: center;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* XP弹出 */
+  .xp-popup {
+    position: fixed; z-index: 100; pointer-events: none;
+    animation: xpFloat 1.2s ease-out forwards;
+  }
+  @keyframes xpFloat {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-60px) scale(1.3); }
+  }
+
+  /* 成就解锁 */
+  .achievement-unlock {
+    animation: achieveIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes achieveIn {
+    from { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+    to { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  /* 搜索框 */
+  .search-box {
+    background: var(--glass);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    color: var(--text);
+    outline: none;
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.3s;
+  }
+  .search-box:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+  }
+  .search-box::placeholder { color: var(--text-muted); }
+
+  /* 开关 */
+  .toggle-switch {
+    width: 48px; height: 26px; border-radius: 13px;
+    background: rgba(124, 58, 237, 0.3); cursor: pointer;
+    position: relative; transition: background 0.3s;
+  }
+  .toggle-switch.active { background: var(--accent); }
+  .toggle-switch::after {
+    content: ''; position: absolute; width: 22px; height: 22px;
+    border-radius: 50%; background: white; top: 2px; left: 2px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .toggle-switch.active::after { transform: translateX(22px); }
+
+  /* 徽章 */
+  .badge-shine {
+    position: relative; overflow: hidden;
+  }
+  .badge-shine::before {
+    content: ''; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: conic-gradient(from 0deg, transparent 0%, rgba(255,255,255,0.1) 10%, transparent 20%);
+    animation: badgeSpin 4s linear infinite;
+  }
+  @keyframes badgeSpin { to { transform: rotate(360deg); } }
+
+  /* 隐藏 */
+  .hidden { display: none !important; }
+
+  /* 安全区域 */
+  .safe-top { padding-top: max(16px, env(safe-area-inset-top)); }
+  .safe-bottom { padding-bottom: max(90px, calc(env(safe-area-inset-bottom) + 80px)); }
+
+  /* 输入框 */
+  .input-field {
+    background: var(--glass);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    color: var(--text);
+    outline: none;
+    width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    transition: all 0.3s;
+  }
+  .input-field:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.15);
+  }
+  .input-field::placeholder { color: var(--text-muted); }
+
+  /* 选项按钮 */
+  .option-btn {
+    padding: 16px 20px; border-radius: 16px;
+    background: var(--glass); border: 2px solid var(--card-border);
+    color: var(--text); font-family: inherit; font-size: 15px;
+    cursor: pointer; transition: all 0.3s; text-align: left;
+    display: flex; align-items: center; gap: 12px; width: 100%;
+  }
+  .option-btn:hover { border-color: var(--accent); background: rgba(6,182,212,0.08); }
+  .option-btn:active { transform: scale(0.98); }
+  .option-btn.correct {
+    border-color: #10b981; background: rgba(16, 185, 129, 0.15);
+    animation: correctPulse 0.5s ease;
+  }
+  .option-btn.wrong {
+    border-color: #ef4444; background: rgba(239, 68, 68, 0.15);
+    animation: shake 0.4s ease;
+  }
+  @keyframes correctPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+
+  /* 星星评分 */
+  .star { transition: all 0.3s ease; }
+  .star.filled { color: #f59e0b; transform: scale(1.1); }
+  .star.empty { color: var(--text-muted); opacity: 0.3; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* 横向滚动隐藏滚动条 */
+  .scroll-x { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+  .scroll-x::-webkit-scrollbar { display: none; }
+
+  /* 闪烁点 */
+  .dot-pulse { animation: dotPulse 1.5s ease-in-out infinite; }
+  .dot-pulse:nth-child(2) { animation-delay: 0.2s; }
+  .dot-pulse:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dotPulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+</style>
+</head>
+<body>
+
+<!-- 背景效果 -->
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+<div class="particles" id="particles"></div>
+
+<!-- 应用容器 -->
+<div id="app" style="position:relative;z-index:1;min-height:100vh;min-height:100dvh;"></div>
+
+<!-- Toast 通知 -->
+<div id="toast" class="toast glass-strong" style="border:1px solid var(--card-border);"></div>
+
+<script>
+// ============================================
+// 音频系统 - Web Audio API
+// ============================================
+const AudioSystem = {
+  ctx: null,
+  bgMusic: null,
+  bgGain: null,
+  sfxGain: null,
+  musicOn: true,
+  sfxOn: true,
+
+  init() {
+    if (this.ctx) return;
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.sfxGain = this.ctx.createGain();
+    this.sfxGain.gain.value = 0.3;
+    this.sfxGain.connect(this.ctx.destination);
+    this.bgGain = this.ctx.createGain();
+    this.bgGain.gain.value = 0.08;
+    this.bgGain.connect(this.ctx.destination);
+  },
+
+  playNote(freq, duration, type = 'sine', gainVal = 0.3) {
+    if (!this.sfxOn || !this.ctx) return;
+    const osc = this.ctx.createOscillator();
+    const g = this.ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    g.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+    osc.connect(g);
+    g.connect(this.sfxGain);
+    osc.start();
+    osc.stop(this.ctx.currentTime + duration);
+  },
+
+  correct() {
+    this.playNote(523, 0.15, 'sine');
+    setTimeout(() => this.playNote(659, 0.15, 'sine'), 100);
+    setTimeout(() => this.playNote(784, 0.3, 'sine'), 200);
+  },
+
+  wrong() {
+    this.playNote(200, 0.3, 'sawtooth', 0.15);
+    setTimeout(() => this.playNote(160, 0.4, 'sawtooth', 0.1), 150);
+  },
+
+  click() { this.playNote(800, 0.06, 'sine', 0.15); },
+
+  levelUp() {
+    [523, 587, 659, 784, 880, 1047].forEach((f, i) => {
+      setTimeout(() => this.playNote(f, 0.2, 'sine', 0.25), i * 80);
+    });
+  },
+
+  spin() {
+    this.playNote(300, 0.05, 'sine', 0.1);
+  },
+
+  achievement() {
+    [784, 988, 1175, 1319].forEach((f, i) => {
+      setTimeout(() => this.playNote(f, 0.3, 'triangle', 0.2), i * 120);
+    });
+  },
+
+  startBgMusic() {
+    if (!this.ctx || this.bgMusic) return;
+    const notes = [261, 329, 392, 523, 392, 329, 261, 196, 261, 329, 392, 440, 523, 440, 392, 329];
+    let idx = 0;
+    const playNext = () => {
+      if (!this.musicOn) return;
+      const osc = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = notes[idx % notes.length];
+      g.gain.setValueAtTime(0.06, this.ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.8);
+      osc.connect(g);
+      g.connect(this.bgGain);
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.9);
+      idx++;
+      this.bgMusic = setTimeout(playNext, 500);
+    };
+    playNext();
+  },
+
+  stopBgMusic() {
+    clearTimeout(this.bgMusic);
+    this.bgMusic = null;
+  },
+
+  toggleMusic() {
+    this.musicOn = !this.musicOn;
+    if (this.musicOn) this.startBgMusic();
+    else this.stopBgMusic();
+    return this.musicOn;
+  },
+
+  toggleSfx() {
+    this.sfxOn = !this.sfxOn;
+    return this.sfxOn;
+  }
+};
+
+// ============================================
+// 多语言系统
+// ============================================
+const i18n = {
+  en: {
+    welcome: "Welcome to MindQuest",
+    playLearnGrow: "Play. Learn. Grow.",
+    enterName: "Enter your name",
+    enterAge: "Enter your age",
+    enterClass: "Class (optional)",
+    letsGo: "Let's Go!",
+    home: "Home",
+    games: "Games",
+    categories: "Categories",
+    leaderboard: "Ranks",
+    profile: "Profile",
+    dailyChallenge: "Daily Challenge",
+    dailyQuiz: "Daily Quiz",
+    weeklyTournament: "Weekly Tournament",
+    monthlyChampionship: "Monthly Championship",
+    xp: "XP",
+    coins: "Coins",
+    level: "Level",
+    streak: "Streak",
+    continueLearning: "Continue Learning",
+    start: "Start",
+    play: "Play",
+    easy: "Easy",
+    medium: "Medium",
+    hard: "Hard",
+    expert: "Expert",
+    next: "Next",
+    finish: "Finish",
+    timeUp: "Time's Up!",
+    correct: "Correct!",
+    wrong: "Wrong!",
+    explanation: "Explanation",
+    score: "Score",
+    questions: "Questions",
+    settings: "Settings",
+    darkMode: "Dark Mode",
+    lightMode: "Light Mode",
+    soundEffects: "Sound Effects",
+    backgroundMusic: "Background Music",
+    language: "Language",
+    english: "English",
+    hindi: "Hindi",
+    punjabi: "Punjabi",
+    search: "Search games...",
+    rewards: "Rewards",
+    certificates: "Certificates",
+    badges: "Badges",
+    achievements: "Achievements",
+    avatar: "Avatar",
+    editProfile: "Edit Profile",
+    stats: "Stats",
+    totalGames: "Total Games",
+    correctAnswers: "Correct Answers",
+    accuracy: "Accuracy",
+    rank: "Rank",
+    noData: "No data yet. Start playing!",
+    earned: "Earned",
+    locked: "Locked",
+    parentDashboard: "Parent Dashboard",
+    teacherDashboard: "Teacher Dashboard",
+    performance: "Performance",
+    analytics: "Analytics",
+    spinTheWheel: "Spin the Wheel",
+    memoryMatch: "Memory Match",
+    trueOrFalse: "True or False",
+    mathBattle: "Math Battle",
+    timeAttack: "Time Attack",
+    puzzle: "Puzzle",
+    wordBuilder: "Word Builder",
+    dragAndDrop: "Drag and Drop",
+    congratulations: "Congratulations!",
+    youEarned: "You earned",
+    newLevel: "New Level!",
+    daysInARow: "days in a row",
+    claimReward: "Claim Reward",
+    logout: "Log Out",
+    world: "World",
+    unlockAt: "Unlock at Level",
+    progress: "Progress",
+    gamesPlayed: "Games Played",
+    winRate: "Win Rate",
+    favoriteCategory: "Favorite Category",
+    recentActivity: "Recent Activity",
+  },
+  hi: {
+    welcome: "माइंडक्वेस्ट में आपका स्वागत है",
+    playLearnGrow: "खेलो। सीखो। बढ़ो।",
+    enterName: "अपना नाम दर्ज करें",
+    enterAge: "अपनी उम्र दर्ज करें",
+    enterClass: "कक्षा (वैकल्पिक)",
+    letsGo: "चलिए शुरू करते हैं!",
+    home: "होम",
+    games: "खेल",
+    categories: "श्रेणियाँ",
+    leaderboard: "रैंक",
+    profile: "प्रोफ़ाइल",
+    dailyChallenge: "दैनिक चुनौती",
+    dailyQuiz: "दैनिक क्विज़",
+    weeklyTournament: "साप्ताहिक टूर्नामेंट",
+    monthlyChampionship: "मासिक चैंपियनशिप",
+    xp: "XP",
+    coins: "सिक्के",
+    level: "स्तर",
+    streak: "स्ट्रीक",
+    continueLearning: "सीखना जारी रखें",
+    start: "शुरू करें",
+    play: "खेलें",
+    easy: "आसान",
+    medium: "मध्यम",
+    hard: "कठिन",
+    expert: "विशेषज्ञ",
+    next: "अगला",
+    finish: "समाप्त",
+    timeUp: "समय समाप्त!",
+    correct: "सही!",
+    wrong: "गलत!",
+    explanation: "व्याख्या",
+    score: "स्कोर",
+    questions: "प्रश्न",
+    settings: "सेटिंग्स",
+    darkMode: "डार्क मोड",
+    lightMode: "लाइट मोड",
+    soundEffects: "ध्वनि प्रभाव",
+    backgroundMusic: "पृष्ठभूमि संगीत",
+    language: "भाषा",
+    english: "अंग्रेज़ी",
+    hindi: "हिंदी",
+    punjabi: "पंजाबी",
+    search: "खेल खोजें...",
+    rewards: "पुरस्कार",
+    certificates: "प्रमाणपत्र",
+    badges: "बैज",
+    achievements: "उपलब्धियाँ",
+    avatar: "अवतार",
+    editProfile: "प्रोफ़ाइल संपादित करें",
+    stats: "आँकड़े",
+    totalGames: "कुल खेल",
+    correctAnswers: "सही उत्तर",
+    accuracy: "सटीकता",
+    rank: "रैंक",
+    noData: "अभी कोई डेटा नहीं। खेलना शुरू करें!",
+    earned: "अर्जित",
+    locked: "लॉक",
+    parentDashboard: "अभिभावक डैशबोर्ड",
+    teacherDashboard: "शिक्षक डैशबोर्ड",
+    performance: "प्रदर्शन",
+    analytics: "विश्लेषिकी",
+    spinTheWheel: "पहिया घुमाएं",
+    memoryMatch: "मेमोरी मैच",
+    trueOrFalse: "सही या गलत",
+    mathBattle: "गणित युद्ध",
+    timeAttack: "समय हमला",
+    puzzle: "पहेली",
+    wordBuilder: "शब्द निर्माता",
+    dragAndDrop: "ड्रैग और ड्रॉप",
+    congratulations: "बधाई हो!",
+    youEarned: "आपने अर्जित किया",
+    newLevel: "नया स्तर!",
+    daysInARow: "दिन लगातार",
+    claimReward: "पुरस्कार लें",
+    logout: "लॉग आउट",
+    world: "दुनिया",
+    unlockAt: "स्तर पर अनलॉक",
+    progress: "प्रगति",
+    gamesPlayed: "खेले गए",
+    winRate: "जीत दर",
+    favoriteCategory: "पसंदीदा श्रेणी",
+    recentActivity: "हालिया गतिविधि",
+  },
+  pa: {
+    welcome: "ਮਾਈਂਡਕੁਏਸਟ ਵਿੱਚ ਜੀ ਆਇਆਂ ਨੂੰ",
+    playLearnGrow: "ਖੇਡੋ। ਸਿੱਖੋ। ਵਧੋ।",
+    enterName: "ਆਪਣਾ ਨਾਮ ਦਰਜ ਕਰੋ",
+    enterAge: "ਆਪਣੀ ਉਮਰ ਦਰਜ ਕਰੋ",
+    enterClass: "ਜਮਾਤ (ਵਿਕਲਪਿਕ)",
+    letsGo: "ਚੱਲੋ ਸ਼ੁਰੂ ਕਰੀਏ!",
+    home: "ਹੋਮ",
+    games: "ਖੇਡਾਂ",
+    categories: "ਸ਼੍ਰੇਣੀਆਂ",
+    leaderboard: "ਰੈਂਕ",
+    profile: "ਪ੍ਰੋਫਾਈਲ",
+    dailyChallenge: "ਰੋਜ਼ਾਨਾ ਚੁਣੌਤੀ",
+    dailyQuiz: "ਰੋਜ਼ਾਨਾ ਕਵਿਜ਼",
+    weeklyTournament: "ਹਫ਼ਤਾਵਾਰੀ ਟੂਰਨਾਮੈਂਟ",
+    monthlyChampionship: "ਮਹੀਨਾਵਾਰ ਚੈਂਪੀਅਨਸ਼ਿਪ",
+    xp: "XP",
+    coins: "ਸਿੱਕੇ",
+    level: "ਪੱਧਰ",
+    streak: "ਸਟ੍ਰੀਕ",
+    continueLearning: "ਸਿੱਖਣਾ ਜਾਰੀ ਰੱਖੋ",
+    start: "ਸ਼ੁਰੂ ਕਰੋ",
+    play: "ਖੇਡੋ",
+    easy: "ਆਸਾਨ",
+    medium: "ਮੱਧਮ",
+    hard: "ਔਖਾ",
+    expert: "ਮਾਹਰ",
+    next: "ਅਗਲਾ",
+    finish: "ਖਤਮ",
+    timeUp: "ਸਮਾਂ ਸਮਾਪਤ!",
+    correct: "ਸਹੀ!",
+    wrong: "ਗਲਤ!",
+    explanation: "ਵਿਆਖਿਆ",
+    score: "ਸਕੋਰ",
+    questions: "ਸਵਾਲ",
+    settings: "ਸੈਟਿੰਗਾਂ",
+    darkMode: "ਡਾਰਕ ਮੋਡ",
+    lightMode: "ਲਾਈਟ ਮੋਡ",
+    soundEffects: "ਆਵਾਜ਼ ਪ੍ਰਭਾਵ",
+    backgroundMusic: "ਬੈਕਗ੍ਰਾਊਂਡ ਸੰਗੀਤ",
+    language: "ਭਾਸ਼ਾ",
+    english: "ਅੰਗਰੇਜ਼ੀ",
+    hindi: "ਹਿੰਦੀ",
+    punjabi: "ਪੰਜਾਬੀ",
+    search: "ਖੇਡਾਂ ਖੋਜੋ...",
+    rewards: "ਇਨਾਮ",
+    certificates: "ਸਰਟੀਫਿਕੇਟ",
+    badges: "ਬੈਜ",
+    achievements: "ਪ੍ਰਾਪਤੀਆਂ",
+    avatar: "ਅਵਤਾਰ",
+    editProfile: "ਪ੍ਰੋਫਾਈਲ ਸੋਧੋ",
+    stats: "ਅੰਕੜੇ",
+    totalGames: "ਕੁੱਲ ਖੇਡਾਂ",
+    correctAnswers: "ਸਹੀ ਜਵਾਬ",
+    accuracy: "ਸ਼ੁੱਧਤਾ",
+    rank: "ਰੈਂਕ",
+    noData: "ਅਜੇ ਕੋਈ ਡਾਟਾ ਨਹੀਂ। ਖੇਡਣਾ ਸ਼ੁਰੂ ਕਰੋ!",
+    earned: "ਪ੍ਰਾਪਤ",
+    locked: "ਲਾਕ",
+    parentDashboard: "ਮਾਪਿਆਂ ਡੈਸ਼ਬੋਰਡ",
+    teacherDashboard: "ਅਧਿਆਪਕ ਡੈਸ਼ਬੋਰਡ",
+    performance: "ਪ੍ਰਦਰਸ਼ਨ",
+    analytics: "ਵਿਸ਼ਲੇਸ਼ਣ",
+    spinTheWheel: "ਪਹੀਆ ਘੁਮਾਓ",
+    memoryMatch: "ਮੈਮੋਰੀ ਮੈਚ",
+    trueOrFalse: "ਸਹੀ ਜਾਂ ਗਲਤ",
+    mathBattle: "ਗਣਿਤ ਜੰਗ",
+    timeAttack: "ਸਮੇਂ ਹਮਲਾ",
+    puzzle: "ਬੁਝਾਗਤ",
+    wordBuilder: "ਸ਼ਬਦ ਬਣਾਓ",
+    dragAndDrop: "ਖਿੱਚੋ ਅਤੇ ਸੁਟੋ",
+    congratulations: "ਮੁਬਾਰਕਾਂ!",
+    youEarned: "ਤੁਸੀਂ ਕਮਾਇਆ",
+    newLevel: "ਨਵਾਂ ਪੱਧਰ!",
+    daysInARow: "ਦਿਨ ਲਗਾਤਾਰ",
+    claimReward: "ਇਨਾਮ ਲਓ",
+    logout: "ਲੌਗ ਆਊਟ",
+    world: "ਦੁਨੀਆ",
+    unlockAt: "ਪੱਧਰ 'ਤੇ ਅਨਲੌਕ",
+    progress: "ਪ੍ਰਗਤੀ",
+    gamesPlayed: "ਖੇਡੀਆਂ ਗਈਆਂ",
+    winRate: "ਜਿੱਤ ਦਰ",
+    favoriteCategory: "ਮਨਪਸੰਦ ਸ਼੍ਰੇਣੀ",
+    recentActivity: "ਹਾਲੀਆ ਗਤੀਵਿਧੀ",
+  }
+};
+
+// ============================================
+// 学习内容和问题数据库
+// ============================================
+const LearningContent = {
+  // 3-6岁
+  '3-6': {
+    categories: [
+      { id: 'alphabet', name: 'Alphabet Games', icon: 'fa-font', color: '#ec4899', world: 1 },
+      { id: 'numbers', name: 'Numbers', icon: 'fa-calculator', color: '#06b6d4', world: 1 },
+      { id: 'shapes', name: 'Shapes', icon: 'fa-shapes', color: '#f59e0b', world: 1 },
+      { id: 'colors', name: 'Colors', icon: 'fa-palette', color: '#10b981', world: 2 },
+      { id: 'animals', name: 'Animals', icon: 'fa-paw', color: '#8b5cf6', world: 2 },
+      { id: 'fruits', name: 'Fruits', icon: 'fa-apple-whole', color: '#ef4444', world: 2 },
+      { id: 'matching', name: 'Matching Games', icon: 'fa-puzzle-piece', color: '#14b8a6', world: 3 },
+      { id: 'memory', name: 'Memory Games', icon: 'fa-brain', color: '#f97316', world: 3 },
+      { id: 'voice', name: 'Voice Learning', icon: 'fa-microphone', color: '#a855f7', world: 3 },
+      { id: 'puzzles', name: 'Simple Puzzles', icon: 'fa-cube', color: '#06b6d4', world: 4 },
+    ],
+    questions: {
+      alphabet: [
+        { q: 'Which letter comes after A?', options: ['B', 'C', 'D', 'E'], answer: 0, explanation: 'B comes right after A in the alphabet: A-B-C-D-E.' },
+        { q: 'What letter is this: "C"?', options: ['C', 'G', 'O', 'Q'], answer: 0, explanation: 'This is the letter C, the third letter of the alphabet.' },
+        { q: 'Which letter makes the "mmm" sound?', options: ['N', 'M', 'S', 'T'], answer: 1, explanation: 'M makes the "mmm" sound, like in "mom" and "moon".' },
+        { q: 'How many vowels are in the English alphabet?', options: ['3', '5', '7', '4'], answer: 1, explanation: 'There are 5 vowels: A, E, I, O, U.' },
+        { q: 'Which letter is a vowel?', options: ['B', 'D', 'E', 'G'], answer: 2, explanation: 'E is a vowel. The vowels are A, E, I, O, U.' },
+      ],
+      numbers: [
+        { q: 'What number comes after 5?', options: ['4', '6', '7', '3'], answer: 1, explanation: '6 comes after 5. The sequence is 4-5-6-7.' },
+        { q: 'How many fingers do you have on one hand?', options: ['3', '4', '5', '6'], answer: 2, explanation: 'You have 5 fingers on each hand.' },
+        { q: 'What is 2 + 2?', options: ['3', '4', '5', '6'], answer: 1, explanation: '2 + 2 = 4. If you have 2 apples and get 2 more, you have 4!' },
+        { q: 'Which is the biggest number?', options: ['3', '7', '1', '5'], answer: 1, explanation: '7 is the biggest number among 3, 7, 1, and 5.' },
+        { q: 'Count backwards: 5, 4, ___?', options: ['6', '2', '3', '1'], answer: 2, explanation: 'Counting backwards from 5: 5, 4, 3, 2, 1.' },
+      ],
+      shapes: [
+        { q: 'How many sides does a triangle have?', options: ['2', '3', '4', '5'], answer: 1, explanation: 'A triangle has 3 sides. "Tri" means three!' },
+        { q: 'Which shape is round?', options: ['Square', 'Triangle', 'Circle', 'Rectangle'], answer: 2, explanation: 'A circle is round with no corners or sides.' },
+        { q: 'How many corners does a square have?', options: ['2', '3', '4', '5'], answer: 2, explanation: 'A square has 4 corners and 4 equal sides.' },
+        { q: 'What shape looks like a diamond?', options: ['Circle', 'Square', 'Triangle', 'Rhombus'], answer: 3, explanation: 'A rhombus looks like a diamond shape tilted on its side.' },
+      ],
+      colors: [
+        { q: 'What color is the sky on a clear day?', options: ['Red', 'Blue', 'Green', 'Yellow'], answer: 1, explanation: 'The sky appears blue on a clear sunny day.' },
+        { q: 'What color do you get when you mix red and yellow?', options: ['Green', 'Purple', 'Orange', 'Blue'], answer: 2, explanation: 'Red + Yellow = Orange! Like an orange fruit.' },
+        { q: 'What color are leaves?', options: ['Blue', 'Red', 'Green', 'Purple'], answer: 2, explanation: 'Most leaves are green because of chlorophyll.' },
+        { q: 'What color is a banana?', options: ['Red', 'Yellow', 'Blue', 'Green'], answer: 1, explanation: 'Bananas are yellow when they are ripe!' },
+      ],
+      animals: [
+        { q: 'Which animal says "Moo"?', options: ['Dog', 'Cat', 'Cow', 'Duck'], answer: 2, explanation: 'Cows say "Moo!" They give us milk.' },
+        { q: 'How many legs does a dog have?', options: ['2', '4', '6', '8'], answer: 1, explanation: 'Dogs have 4 legs. They use them to run and play!' },
+        { q: 'Which animal can fly?', options: ['Fish', 'Bird', 'Cat', 'Rabbit'], answer: 1, explanation: 'Birds can fly because they have wings and feathers.' },
+        { q: 'Which animal lives in water?', options: ['Lion', 'Elephant', 'Fish', 'Horse'], answer: 2, explanation: 'Fish live in water and breathe through gills.' },
+      ],
+      fruits: [
+        { q: 'Which fruit is red and round?', options: ['Banana', 'Apple', 'Grape', 'Lemon'], answer: 1, explanation: 'Apples are red and round. "An apple a day keeps the doctor away!"' },
+        { q: 'Which fruit is yellow and curved?', options: ['Apple', 'Orange', 'Banana', 'Grape'], answer: 2, explanation: 'Bananas are yellow and have a curved shape.' },
+        { q: 'Which fruit is small and purple or green?', options: ['Watermelon', 'Grape', 'Mango', 'Pineapple'], answer: 1, explanation: 'Grapes are small, round fruits that can be purple or green.' },
+      ],
+    }
+  },
+  // 7-12岁
+  '7-12': {
+    categories: [
+      { id: 'maths', name: 'Maths', icon: 'fa-square-root-variable', color: '#06b6d4', world: 1 },
+      { id: 'english', name: 'English', icon: 'fa-book-open', color: '#ec4899', world: 1 },
+      { id: 'science', name: 'Science', icon: 'fa-flask', color: '#10b981', world: 1 },
+      { id: 'gk', name: 'General Knowledge', icon: 'fa-globe', color: '#f59e0b', world: 2 },
+      { id: 'coding', name: 'Coding Basics', icon: 'fa-code', color: '#8b5cf6', world: 2 },
+      { id: 'geography', name: 'Geography', icon: 'fa-earth-americas', color: '#14b8a6', world: 2 },
+      { id: 'history', name: 'History', icon: 'fa-landmark', color: '#f97316', world: 3 },
+      { id: 'quiz', name: 'Quiz Games', icon: 'fa-question-circle', color: '#ef4444', world: 3 },
+      { id: 'wordsearch', name: 'Word Search', icon: 'fa-magnifying-glass', color: '#a855f7', world: 3 },
+      { id: 'crossword', name: 'Crossword', icon: 'fa-table-cells', color: '#06b6d4', world: 4 },
+      { id: 'puzzle_challenges', name: 'Puzzle Challenges', icon: 'fa-puzzle-piece', color: '#ec4899', world: 4 },
+    ],
+    questions: {
+      maths: [
+        { q: 'What is 15 × 12?', options: ['160', '180', '170', '190'], answer: 1, explanation: '15 × 12 = 15 × 10 + 15 × 2 = 150 + 30 = 180.' },
+        { q: 'What is the perimeter of a rectangle with length 8cm and width 5cm?', options: ['13cm', '26cm', '40cm', '20cm'], answer: 1, explanation: 'Perimeter = 2 × (length + width) = 2 × (8 + 5) = 2 × 13 = 26cm.' },
+        { q: 'What is 3/4 + 1/4?', options: ['4/8', '1', '2/4', '4/4'], answer: 1, explanation: '3/4 + 1/4 = 4/4 = 1. When denominators are the same, add the numerators.' },
+        { q: 'What is the next prime number after 7?', options: ['8', '9', '10', '11'], answer: 3, explanation: '11 is the next prime number. 8, 9, and 10 are all composite numbers.' },
+        { q: 'If a triangle has angles 60° and 80°, what is the third angle?', options: ['50°', '40°', '30°', '60°'], answer: 1, explanation: 'Sum of angles in a triangle = 180°. Third angle = 180° - 60° - 80° = 40°.' },
+      ],
+      english: [
+        { q: 'What is the past tense of "run"?', options: ['Runned', 'Ran', 'Running', 'Runed'], answer: 1, explanation: '"Run" is an irregular verb. Its past tense is "ran," not "runned."' },
+        { q: 'Which word is a synonym for "happy"?', options: ['Sad', 'Angry', 'Joyful', 'Tired'], answer: 2, explanation: '"Joyful" means feeling or showing great happiness, making it a synonym for "happy."' },
+        { q: 'Identify the noun: "The cat sat on the mat."', options: ['sat', 'on', 'cat', 'the'], answer: 2, explanation: '"Cat" and "mat" are nouns — they name people, places, or things.' },
+        { q: 'What is the plural of "child"?', options: ['Childs', 'Children', 'Childes', 'Child\'s'], answer: 1, explanation: '"Child" has an irregular plural form: "children."' },
+        { q: 'Which sentence is correct?', options: ['She don\'t like it', 'She doesn\'t like it', 'She not like it', 'She no like it'], answer: 1, explanation: 'With third person singular (she), we use "doesn\'t" (does not) in negative sentences.' },
+      ],
+      science: [
+        { q: 'What planet is known as the Red Planet?', options: ['Venus', 'Mars', 'Jupiter', 'Saturn'], answer: 1, explanation: 'Mars is called the Red Planet because of iron oxide (rust) on its surface.' },
+        { q: 'What is the process by which plants make food?', options: ['Respiration', 'Photosynthesis', 'Digestion', 'Evaporation'], answer: 1, explanation: 'Photosynthesis is how plants use sunlight, water, and CO₂ to make glucose and oxygen.' },
+        { q: 'What is the boiling point of water?', options: ['90°C', '100°C', '110°C', '80°C'], answer: 1, explanation: 'Water boils at 100°C (212°F) at standard atmospheric pressure.' },
+        { q: 'Which gas do humans breathe out?', options: ['Oxygen', 'Nitrogen', 'Carbon Dioxide', 'Hydrogen'], answer: 2, explanation: 'We breathe in oxygen and breathe out carbon dioxide (CO₂) as a waste product.' },
+        { q: 'What is the largest organ in the human body?', options: ['Heart', 'Liver', 'Skin', 'Brain'], answer: 2, explanation: 'The skin is the largest organ, covering about 20 square feet in adults.' },
+      ],
+      gk: [
+        { q: 'How many continents are there?', options: ['5', '6', '7', '8'], answer: 2, explanation: 'There are 7 continents: Asia, Africa, North America, South America, Antarctica, Europe, and Australia.' },
+        { q: 'Who painted the Mona Lisa?', options: ['Picasso', 'Leonardo da Vinci', 'Michelangelo', 'Raphael'], answer: 1, explanation: 'Leonardo da Vinci painted the Mona Lisa between 1503 and 1519.' },
+        { q: 'What is the largest ocean on Earth?', options: ['Atlantic', 'Indian', 'Arctic', 'Pacific'], answer: 3, explanation: 'The Pacific Ocean is the largest and deepest ocean, covering about 63 million sq miles.' },
+        { q: 'Which country has the most people?', options: ['USA', 'India', 'China', 'Russia'], answer: 1, explanation: 'India recently became the most populous country with over 1.4 billion people.' },
+      ],
+      coding: [
+        { q: 'What does HTML stand for?', options: ['Hyper Text Markup Language', 'High Tech Modern Language', 'Home Tool Markup Language', 'Hyperlink Text Mode Language'], answer: 0, explanation: 'HTML = HyperText Markup Language. It structures web pages with tags.' },
+        { q: 'Which symbol is used for comments in Python?', options: ['//', '#', '/* */', '--'], answer: 1, explanation: 'In Python, the # symbol is used to write single-line comments.' },
+        { q: 'What is a loop?', options: ['A type of variable', 'Code that repeats', 'A function name', 'A data type'], answer: 1, explanation: 'A loop repeats a block of code multiple times until a condition is met.' },
+        { q: 'What does CSS stand for?', options: ['Computer Style Sheets', 'Creative Style System', 'Cascading Style Sheets', 'Colorful Style Sheets'], answer: 2, explanation: 'CSS = Cascading Style Sheets. It controls how HTML elements look on a webpage.' },
+      ],
+      geography: [
+        { q: 'What is the longest river in the world?', options: ['Amazon', 'Nile', 'Mississippi', 'Yangtze'], answer: 1, explanation: 'The Nile River in Africa is approximately 6,650 km long, making it the longest.' },
+        { q: 'Which is the largest country by area?', options: ['Canada', 'China', 'USA', 'Russia'], answer: 3, explanation: 'Russia is the largest country, spanning over 17 million square kilometers.' },
+        { q: 'What is the capital of Australia?', options: ['Sydney', 'Melbourne', 'Canberra', 'Perth'], answer: 2, explanation: 'Canberra is the capital of Australia, not Sydney as many people think!' },
+      ],
+      history: [
+        { q: 'In which year did World War II end?', options: ['1943', '1944', '1945', '1946'], answer: 2, explanation: 'WWII ended in 1945 with the surrender of Germany in May and Japan in September.' },
+        { q: 'Who was the first President of the United States?', options: ['Thomas Jefferson', 'George Washington', 'Abraham Lincoln', 'John Adams'], answer: 1, explanation: 'George Washington served as the first U.S. President from 1789 to 1797.' },
+        { q: 'Which ancient civilization built the pyramids?', options: ['Roman', 'Greek', 'Egyptian', 'Mesopotamian'], answer: 2, explanation: 'Ancient Egyptians built the pyramids as tombs for their pharaohs around 2600 BC.' },
+      ],
+    }
+  },
+  // 13-18岁
+  '13-18': {
+    categories: [
+      { id: 'adv_maths', name: 'Advanced Maths', icon: 'fa-infinity', color: '#06b6d4', world: 1 },
+      { id: 'physics', name: 'Physics', icon: 'fa-atom', color: '#8b5cf6', world: 1 },
+      { id: 'chemistry', name: 'Chemistry', icon: 'fa-vial', color: '#10b981', world: 1 },
+      { id: 'biology', name: 'Biology', icon: 'fa-dna', color: '#ec4899', world: 2 },
+      { id: 'cs', name: 'Computer Science', icon: 'fa-laptop-code', color: '#f59e0b', world: 2 },
+      { id: 'programming', name: 'Programming', icon: 'fa-terminal', color: '#ef4444', world: 2 },
+      { id: 'logical', name: 'Logical Reasoning', icon: 'fa-brain', color: '#14b8a6', world: 3 },
+      { id: 'aptitude', name: 'Aptitude', icon: 'fa-chart-line', color: '#f97316', world: 3 },
+      { id: 'comp_quiz', name: 'Competitive Quiz', icon: 'fa-trophy', color: '#a855f7', world: 3 },
+      { id: 'vocab', name: 'English Vocabulary', icon: 'fa-spell-check', color: '#06b6d4', world: 4 },
+    ],
+    questions: {
+      adv_maths: [
+        { q: 'What is the derivative of sin(x)?', options: ['-sin(x)', 'cos(x)', 'tan(x)', '-cos(x)'], answer: 1, explanation: 'The derivative of sin(x) is cos(x). This is a fundamental derivative rule in calculus.' },
+        { q: 'What is the value of log₁₀(1000)?', options: ['2', '3', '4', '10'], answer: 1, explanation: 'log₁₀(1000) = 3 because 10³ = 1000.' },
+        { q: 'What is the sum of an arithmetic series 1+2+3+...+100?', options: ['5000', '5050', '5100', '4900'], answer: 1, explanation: 'Sum = n(n+1)/2 = 100×101/2 = 5050. This is Gauss\'s famous formula.' },
+        { q: 'What is the integral of 1/x?', options: ['x²', 'ln|x| + C', '1/x² + C', 'x + C'], answer: 1, explanation: 'The integral of 1/x dx = ln|x| + C, where C is the constant of integration.' },
+        { q: 'If a matrix has determinant 0, it is called:', options: ['Identity', 'Singular', 'Diagonal', 'Symmetric'], answer: 1, explanation: 'A matrix with determinant 0 is singular, meaning it has no inverse.' },
+      ],
+      physics: [
+        { q: 'What is Newton\'s second law of motion?', options: ['F = ma', 'E = mc²', 'PV = nRT', 'F = mv'], answer: 0, explanation: 'Newton\'s second law: Force equals mass times acceleration (F = ma).' },
+        { q: 'What is the speed of light in vacuum?', options: ['3×10⁶ m/s', '3×10⁸ m/s', '3×10¹⁰ m/s', '3×10⁴ m/s'], answer: 1, explanation: 'The speed of light in vacuum is approximately 3×10⁸ meters per second (299,792,458 m/s).' },
+        { q: 'What is the SI unit of electric current?', options: ['Volt', 'Watt', 'Ampere', 'Ohm'], answer: 2, explanation: 'The SI unit of electric current is the Ampere (A), named after André-Marie Ampère.' },
+        { q: 'What phenomenon explains why the sky is blue?', options: ['Reflection', 'Refraction', 'Rayleigh Scattering', 'Diffraction'], answer: 2, explanation: 'Rayleigh scattering causes shorter blue wavelengths to scatter more than other colors.' },
+      ],
+      chemistry: [
+        { q: 'What is the atomic number of Carbon?', options: ['4', '6', '8', '12'], answer: 1, explanation: 'Carbon has atomic number 6, meaning it has 6 protons in its nucleus.' },
+        { q: 'What type of bond involves sharing of electrons?', options: ['Ionic', 'Covalent', 'Metallic', 'Hydrogen'], answer: 1, explanation: 'Covalent bonds form when atoms share electrons to achieve stable electron configurations.' },
+        { q: 'What is the pH of a neutral solution?', options: ['0', '7', '14', '1'], answer: 1, explanation: 'A neutral solution has a pH of 7. Below 7 is acidic, above 7 is basic.' },
+        { q: 'What is Avogadro\'s number?', options: ['6.022×10²³', '3.14×10²³', '6.022×10²⁰', '1.602×10⁻¹⁹'], answer: 0, explanation: 'Avogadro\'s number (6.022×10²³) is the number of particles in one mole of a substance.' },
+      ],
+      biology: [
+        { q: 'What is the powerhouse of the cell?', options: ['Nucleus', 'Ribosome', 'Mitochondria', 'Golgi body'], answer: 2, explanation: 'Mitochondria are called the powerhouse because they produce ATP (energy) through cellular respiration.' },
+        { q: 'What is DNA full form?', options: ['Deoxyribonucleic Acid', 'Dinitrogen Acid', 'Deoxyribose Nucleic Atom', 'Dynamic Nuclear Acid'], answer: 0, explanation: 'DNA = Deoxyribonucleic Acid, the molecule that carries genetic instructions.' },
+        { q: 'Which blood type is the universal donor?', options: ['A', 'B', 'AB', 'O-'], answer: 3, explanation: 'O negative is the universal donor because it has no A, B antigens or Rh factor.' },
+      ],
+      cs: [
+        { q: 'What is the time complexity of binary search?', options: ['O(n)', 'O(log n)', 'O(n²)', 'O(1)'], answer: 1, explanation: 'Binary search divides the search space in half each step, giving O(log n) time complexity.' },
+        { q: 'Which data structure uses FIFO?', options: ['Stack', 'Queue', 'Tree', 'Graph'], answer: 1, explanation: 'Queue uses FIFO (First In, First Out) — the first element added is the first removed.' },
+        { q: 'What is an algorithm?', options: ['A programming language', 'A step-by-step procedure', 'A type of computer', 'A data format'], answer: 1, explanation: 'An algorithm is a finite, step-by-step procedure for solving a problem or performing a task.' },
+      ],
+      programming: [
+        { q: 'What will `console.log(typeof null)` output in JavaScript?', options: ['"null"', '"undefined"', '"object"', '"boolean"'], answer: 2, explanation: 'This is a famous JavaScript bug. typeof null returns "object" due to how JS was originally implemented.' },
+        { q: 'What is recursion?', options: ['A loop structure', 'A function calling itself', 'A variable type', 'An error handler'], answer: 1, explanation: 'Recursion is when a function calls itself to solve smaller instances of the same problem.' },
+        { q: 'What does OOP stand for?', options: ['Open Output Programming', 'Object-Oriented Programming', 'Optimal Operation Protocol', 'Ordered Object Processing'], answer: 1, explanation: 'OOP = Object-Oriented Programming, which organizes code around objects and classes.' },
+      ],
+      logical: [
+        { q: 'If all cats are animals, and some animals are pets, then:', options: ['All cats are pets', 'Some cats may be pets', 'No cats are pets', 'All pets are cats'], answer: 1, explanation: 'We can only conclude "some cats may be pets" — we cannot make a definite statement.' },
+        { q: 'What comes next: 2, 6, 12, 20, 30, ___?', options: ['40', '42', '36', '44'], answer: 1, explanation: 'Differences are 4, 6, 8, 10, 12. Next = 30 + 12 = 42. Pattern: n(n+1).' },
+        { q: 'If A > B, B > C, and C > D, which is definitely true?', options: ['D > A', 'A > D', 'B = D', 'A = C'], answer: 1, explanation: 'By transitivity: A > B > C > D, so A > D is definitely true.' },
+      ],
+      vocab: [
+        { q: 'What does "ubiquitous" mean?', options: ['Rare', 'Present everywhere', 'Unknown', 'Unique'], answer: 1, explanation: '"Ubiquitous" means appearing everywhere — like smartphones in modern life.' },
+        { q: 'Choose the correct word: "The company made a ___ decision."', options: ['prudent', 'prudant', 'prudint', 'prodent'], answer: 0, explanation: '"Prudent" means wise and careful, especially with money or decisions.' },
+        { q: 'What is an antonym of "benevolent"?', options: ['Kind', 'Malevolent', 'Generous', 'Gentle'], answer: 1, explanation: '"Malevolent" means having evil intent — the opposite of "benevolent" (well-meaning).' },
+      ],
+    }
+  },
+  // 18+
+  '18+': {
+    categories: [
+      { id: 'current_affairs', name: 'Current Affairs', icon: 'fa-newspaper', color: '#ef4444', world: 1 },
+      { id: 'finance', name: 'Finance', icon: 'fa-coins', color: '#f59e0b', world: 1 },
+      { id: 'business', name: 'Business', icon: 'fa-briefcase', color: '#06b6d4', world: 1 },
+      { id: 'technology', name: 'Technology', icon: 'fa-microchip', color: '#8b5cf6', world: 2 },
+      { id: 'ai', name: 'Artificial Intelligence', icon: 'fa-robot', color: '#ec4899', world: 2 },
+      { id: 'coding_adult', name: 'Coding', icon: 'fa-code', color: '#10b981', world: 2 },
+      { id: 'soft_skills', name: 'Soft Skills', icon: 'fa-people-group', color: '#14b8a6', world: 3 },
+      { id: 'communication', name: 'Communication', icon: 'fa-comments', color: '#f97316', world: 3 },
+      { id: 'interview', name: 'Interview Prep', icon: 'fa-user-tie', color: '#a855f7', world: 3 },
+      { id: 'career', name: 'Career Guidance', icon: 'fa-road', color: '#06b6d4', world: 4 },
+      { id: 'gov_exam', name: 'Govt Exam Practice', icon: 'fa-building-columns', color: '#ef4444', world: 4 },
+      { id: 'iq', name: 'IQ Challenges', icon: 'fa-lightbulb', color: '#f59e0b', world: 4 },
+    ],
+    questions: {
+      current_affairs: [
+        { q: 'Which organization launched the GPT series of AI models?', options: ['Google', 'OpenAI', 'Meta', 'Microsoft'], answer: 1, explanation: 'OpenAI launched the GPT (Generative Pre-trained Transformer) series, starting with GPT-1 in 2018.' },
+        { q: 'What is the primary goal of the Paris Agreement?', options: ['Military alliance', 'Climate change mitigation', 'Space exploration', 'Trade liberalization'], answer: 1, explanation: 'The Paris Agreement (2015) aims to limit global warming to well below 2°C above pre-industrial levels.' },
+        { q: 'Which country hosted the 2024 Summer Olympics?', options: ['Japan', 'China', 'France', 'USA'], answer: 2, explanation: 'Paris, France hosted the 2024 Summer Olympics, marking the third time Paris hosted.' },
+      ],
+      finance: [
+        { q: 'What is compound interest?', options: ['Interest on principal only', 'Interest on principal + accumulated interest', 'Fixed interest rate', 'No interest'], answer: 1, explanation: 'Compound interest is calculated on both the principal and the previously accumulated interest.' },
+        { q: 'What does ROI stand for?', options: ['Rate of Income', 'Return on Investment', 'Revenue of Interest', 'Risk of Inflation'], answer: 1, explanation: 'ROI = Return on Investment, measuring the profitability of an investment as a percentage.' },
+        { q: 'What is a mutual fund?', options: ['A bank account', 'A pooled investment vehicle', 'A type of bond', 'An insurance policy'], answer: 1, explanation: 'A mutual fund pools money from many investors to invest in a diversified portfolio of securities.' },
+      ],
+      technology: [
+        { q: 'What does "cloud computing" mean?', options: ['Weather prediction', 'Computing over the internet', 'Using actual clouds', 'Air conditioning for servers'], answer: 1, explanation: 'Cloud computing delivers computing services (storage, processing) over the internet instead of local servers.' },
+        { q: 'What is blockchain?', options: ['A video game', 'A distributed digital ledger', 'A type of computer', 'A social network'], answer: 1, explanation: 'Blockchain is a decentralized, distributed digital ledger that records transactions across many computers.' },
+        { q: 'What is 5G?', options: ['5th generation mobile network', '5 gigabytes', '5th generation computer', 'A satellite system'], answer: 0, explanation: '5G is the 5th generation of mobile networks, offering faster speeds and lower latency than 4G.' },
+      ],
+      ai: [
+        { q: 'What does "machine learning" enable computers to do?', options: ['Get tired', 'Learn from data without explicit programming', 'Build hardware', 'Replace electricity'], answer: 1, explanation: 'Machine learning allows computers to learn patterns from data and improve without being explicitly programmed.' },
+        { q: 'What is a neural network inspired by?', options: ['Internet', 'Human brain', 'Libraries', 'Databases'], answer: 1, explanation: 'Artificial neural networks are inspired by the structure and function of biological neurons in the human brain.' },
+        { q: 'What is "deep learning"?', options: ['Learning while sleeping', 'Neural networks with many layers', 'Reading books quickly', 'Memorizing facts'], answer: 1, explanation: 'Deep learning uses neural networks with multiple hidden layers to learn complex patterns from data.' },
+      ],
+      coding_adult: [
+        { q: 'What is a REST API?', options: ['A type of database', 'An architectural style for web services', 'A programming language', 'A browser feature'], answer: 1, explanation: 'REST (Representational State Transfer) is an architectural style for designing networked applications.' },
+        { q: 'What does Git help with?', options: ['Cooking', 'Version control', 'Graphic design', 'Gaming'], answer: 1, explanation: 'Git is a distributed version control system that tracks changes in source code during software development.' },
+        { q: 'What is Docker used for?', options: ['Writing code', 'Containerizing applications', 'Designing UI', 'Managing databases'], answer: 1, explanation: 'Docker packages applications into containers — standardized, portable units that run consistently anywhere.' },
+      ],
+      soft_skills: [
+        { q: 'What is emotional intelligence (EQ)?', options: ['Being very emotional', 'Ability to recognize and manage emotions', 'Crying easily', 'Being introverted'], answer: 1, explanation: 'EQ is the ability to identify, understand, and manage your own and others\' emotions effectively.' },
+        { q: 'What is active listening?', options: ['Hearing sounds', 'Fully focusing on the speaker and responding thoughtfully', 'Talking loudly', 'Multi-tasking while listening'], answer: 1, explanation: 'Active listening involves fully concentrating on, understanding, responding to, and remembering what is being said.' },
+      ],
+      interview: [
+        { q: 'What is the STAR method in interviews?', options: ['A rating system', 'Situation, Task, Action, Result framework', 'A personality test', 'A salary negotiation tactic'], answer: 1, explanation: 'STAR = Situation, Task, Action, Result — a structured method to answer behavioral interview questions.' },
+        { q: 'How should you answer "What is your weakness?"', options: ['Say you have none', 'Give a genuine weakness and how you\'re improving', 'Make a joke', 'Criticize your previous employer'], answer: 1, explanation: 'The best approach is to share a real weakness and demonstrate self-awareness by explaining your improvement plan.' },
+      ],
+      iq: [
+        { q: 'If DOG = 4127, what is CAT?', options: ['3120', '3122', '3120', '3124'], answer: 0, explanation: 'D=4th letter, O=15th(1+5=6... wait, let me recalculate). D=4, O=15→1+5=6... Actually: D=4, O=15, G=7 → 4157. Following same pattern: C=3, A=1, T=20 → 3120.' },
+        { q: 'What is the next number: 1, 1, 2, 3, 5, 8, 13, ___?', options: ['18', '20', '21', '26'], answer: 2, explanation: 'This is the Fibonacci sequence where each number is the sum of the two preceding ones: 8+13=21.' },
+        { q: 'A is B\'s brother. C is B\'s mother. D is C\'s father. How is A related to D?', options: ['Grandson', 'Son', 'Nephew', 'Uncle'], answer: 0, explanation: 'D is C\'s father (A\'s grandfather). Since A is C\'s child (through B), A is D\'s grandson.' },
+      ],
+    }
+  }
+};
+
+// ============================================
+// 游戏类型和图标映射
+// ============================================
+const GameTypes = {
+  mcq: { name: 'MCQ Quiz', icon: 'fa-circle-question', color: '#06b6d4' },
+  drag_drop: { name: 'Drag and Drop', icon: 'fa-hand-pointer', color: '#8b5cf6' },
+  puzzle: { name: 'Puzzle', icon: 'fa-puzzle-piece', color: '#f59e0b' },
+  memory: { name: 'Memory Cards', icon: 'fa-clone', color: '#ec4899' },
+  spin: { name: 'Spin Wheel', icon: 'fa-dharmachakra', color: '#10b981' },
+  treasure: { name: 'Treasure Hunt', icon: 'fa-gem', color: '#f97316' },
+  escape: { name: 'Escape Room', icon: 'fa-door-open', color: '#ef4444' },
+  word_builder: { name: 'Word Builder', icon: 'fa-font', color: '#14b8a6' },
+  crossword: { name: 'Crossword', icon: 'fa-table-cells', color: '#a855f7' },
+  sudoku: { name: 'Sudoku', icon: 'fa-table', color: '#06b6d4' },
+  math_battle: { name: 'Math Battle', icon: 'fa-bolt', color: '#f59e0b' },
+  coding: { name: 'Coding Challenge', icon: 'fa-code', color: '#10b981' },
+  time_attack: { name: 'Time Attack', icon: 'fa-stopwatch', color: '#ef4444' },
+  true_false: { name: 'True or False', icon: 'fa-check-double', color: '#8b5cf6' },
+};
+
+// ============================================
+// 徽章系统
+// ============================================
+const Badges = [
+  { id: 'first_game', name: 'First Steps', icon: 'fa-shoe-prints', desc: 'Play your first game', color: '#06b6d4' },
+  { id: 'streak_3', name: 'On Fire', icon: 'fa-fire', desc: '3-day streak', color: '#f97316' },
+  { id: 'streak_7', name: 'Unstoppable', icon: 'fa-fire-flame-curved', desc: '7-day streak', color: '#ef4444' },
+  { id: 'streak_30', name: 'Legendary', icon: 'fa-crown', desc: '30-day streak', color: '#f59e0b' },
+  { id: 'perfect_score', name: 'Perfectionist', icon: 'fa-star', desc: 'Get 100% on any quiz', color: '#f59e0b' },
+  { id: 'coins_100', name: 'Coin Collector', icon: 'fa-coins', desc: 'Earn 100 coins', color: '#f59e0b' },
+  { id: 'coins_1000', name: 'Rich', icon: 'fa-sack-dollar', desc: 'Earn 1000 coins', color: '#10b981' },
+  { id: 'level_5', name: 'Rising Star', icon: 'fa-arrow-up', desc: 'Reach Level 5', color: '#8b5cf6' },
+  { id: 'level_10', name: 'Scholar', icon: 'fa-graduation-cap', desc: 'Reach Level 10', color: '#ec4899' },
+  { id: 'level_25', name: 'Mastermind', icon: 'fa-brain', desc: 'Reach Level 25', color: '#06b6d4' },
+  { id: 'games_10', name: 'Dedicated', icon: 'fa-gamepad', desc: 'Play 10 games', color: '#14b8a6' },
+  { id: 'games_50', name: 'Veteran', icon: 'fa-medal', desc: 'Play 50 games', color: '#a855f7' },
+  { id: 'all_categories', name: 'Explorer', icon: 'fa-compass', desc: 'Try all categories', color: '#f97316' },
+  { id: 'speed_demon', name: 'Speed Demon', icon: 'fa-bolt', desc: 'Complete Time Attack', color: '#ef4444' },
+  { id: 'memory_master', name: 'Memory Master', icon: 'fa-clone', desc: 'Win Memory Game', color: '#ec4899' },
+  { id: 'spin_winner', name: 'Lucky Spin', icon: 'fa-dharmachakra', desc: 'Win Spin Wheel', color: '#10b981' },
+];
+
+// ============================================
+// 头像选项
+// ============================================
+const Avatars = [
+  { id: 'avatar_1', emoji: '🦊', color: '#f97316' },
+  { id: 'avatar_2', emoji: '🦁', color: '#f59e0b' },
+  { id: 'avatar_3', emoji: '🐼', color: '#64748b' },
+  { id: 'avatar_4', emoji: '🦄', color: '#ec4899' },
+  { id: 'avatar_5', emoji: '🐲', color: '#ef4444' },
+  { id: 'avatar_6', emoji: '🦅', color: '#8b5cf6' },
+  { id: 'avatar_7', emoji: '🐬', color: '#06b6d4' },
+  { id: 'avatar_8', emoji: '🦋', color: '#a855f7' },
+  { id: 'avatar_9', emoji: '🐙', color: '#14b8a6' },
+  { id: 'avatar_10', emoji: '🦉', color: '#f59e0b' },
+  { id: 'avatar_11', emoji: '🐻', color: '#92400e' },
+  { id: 'avatar_12', emoji: '🐸', color: '#10b981' },
+];
+
+// ============================================
+// 应用状态管理
+// ============================================
+const State = {
+  currentPage: 'welcome',
+  previousPage: null,
+  user: null,
+  darkMode: true,
+  language: 'en',
+  musicOn: true,
+  sfxOn: true,
+  searchQuery: '',
+  currentGame: null,
+  gameData: null,
+  toasts: [],
+};
+
+function t(key) { return i18n[State.language][key] || i18n['en'][key] || key; }
+
+function getUserData() {
+  try {
+    const d = localStorage.getItem('mindquest_user');
+    return d ? JSON.parse(d) : null;
+  } catch { return null; }
+}
+
+function saveUserData(data) {
+  try { localStorage.setItem('mindquest_user', JSON.stringify(data)); } catch {}
+}
+
+function getAgeGroup(age) {
+  if (age >= 3 && age <= 6) return '3-6';
+  if (age >= 7 && age <= 12) return '7-12';
+  if (age >= 13 && age <= 18) return '13-18';
+  return '18+';
+}
+
+function getCategories() {
+  if (!State.user) return [];
+  const group = getAgeGroup(State.user.age);
+  return LearningContent[group]?.categories || [];
+}
+
+function getQuestions(catId) {
+  if (!State.user) return [];
+  const group = getAgeGroup(State.user.age);
+  return LearningContent[group]?.questions?.[catId] || [];
+}
+
+function getXpForLevel(level) { return level * 100; }
+
+function addXp(amount) {
+  if (!State.user) return;
+  State.user.xp += amount;
+  const needed = getXpForLevel(State.user.level);
+  let leveledUp = false;
+  while (State.user.xp >= needed) {
+    State.user.xp -= getXpForLevel(State.user.level);
+    State.user.level++;
+    leveledUp = true;
+  }
+  saveUserData(State.user);
+  if (leveledUp) {
+    AudioSystem.levelUp();
+    showToast(`${t('newLevel')} ${State.user.level}`, 'success');
+  }
+}
+
+function addCoins(amount) {
+  if (!State.user) return;
+  State.user.coins += amount;
+  saveUserData(State.user);
+}
+
+function updateStreak() {
+  if (!State.user) return;
+  const today = new Date().toDateString();
+  if (State.user.lastPlayDate === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (State.user.lastPlayDate === yesterday) {
+    State.user.streak++;
+  } else if (State.user.lastPlayDate !== today) {
+    State.user.streak = 1;
+  }
+  State.user.lastPlayDate = today;
+  saveUserData(State.user);
+}
+
+function recordGameResult(catId, correct, total, timeTaken) {
+  if (!State.user) return;
+  if (!State.user.gameHistory) State.user.gameHistory = [];
+  if (!State.user.categoryProgress) State.user.categoryProgress = {};
+  if (!State.user.categoryProgress[catId]) {
+    State.user.categoryProgress[catId] = { played: 0, correct: 0, total: 0, bestScore: 0 };
+  }
+  const cp = State.user.categoryProgress[catId];
+  cp.played++;
+  cp.correct += correct;
+  cp.total += total;
+  const score = Math.round((correct / total) * 100);
+  if (score > cp.bestScore) cp.bestScore = score;
+  State.user.totalGames = (State.user.totalGames || 0) + 1;
+  State.user.totalCorrect = (State.user.totalCorrect || 0) + correct;
+  State.user.totalQuestions = (State.user.totalQuestions || 0) + total;
+  State.user.gameHistory.unshift({
+    catId, correct, total, score, timeTaken, date: new Date().toISOString()
+  });
+  if (State.user.gameHistory.length > 50) State.user.gameHistory.pop();
+  saveUserData(State.user);
+  checkBadges();
+}
+
+function checkBadges() {
+  if (!State.user) return;
+  if (!State.user.badges) State.user.badges = [];
+  const u = State.user;
+  const checks = [
+    { id: 'first_game', cond: (u.totalGames || 0) >= 1 },
+    { id: 'streak_3', cond: (u.streak || 0) >= 3 },
+    { id: 'streak_7', cond: (u.streak || 0) >= 7 },
+    { id: 'streak_30', cond: (u.streak || 0) >= 30 },
+    { id: 'coins_100', cond: (u.coins || 0) >= 100 },
+    { id: 'coins_1000', cond: (u.coins || 0) >= 1000 },
+    { id: 'level_5', cond: u.level >= 5 },
+    { id: 'level_10', cond: u.level >= 10 },
+    { id: 'level_25', cond: u.level >= 25 },
+    { id: 'games_10', cond: (u.totalGames || 0) >= 10 },
+    { id: 'games_50', cond: (u.totalGames || 0) >= 50 },
+  ];
+  checks.forEach(c => {
+    if (c.cond && !u.badges.includes(c.id)) {
+      u.badges.push(c.id);
+      const badge = Badges.find(b => b.id === c.id);
+      if (badge) {
+        AudioSystem.achievement();
+        showToast(`Badge Unlocked: ${badge.name}!`, 'achievement');
+      }
+    }
+  });
+  saveUserData(u);
+}
+
+// ============================================
+// Toast 通知
+// ============================================
+function showToast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.background = type === 'success' ? 'rgba(16,185,129,0.9)' :
+                         type === 'error' ? 'rgba(239,68,68,0.9)' :
+                         type === 'achievement' ? 'rgba(124,58,237,0.9)' :
+                         'rgba(30,58,138,0.9)';
+  el.style.color = '#fff';
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ============================================
+// 粒子初始化
+// ============================================
+function initParticles() {
+  const c = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (8 + Math.random() * 15) + 's';
+    p.style.animationDelay = Math.random() * 10 + 's';
+    p.style.width = (2 + Math.random() * 3) + 'px';
+    p.style.height = p.style.width;
+    const colors = ['#06b6d4', '#7c3aed', '#ec4899', '#f59e0b', '#10b981'];
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.appendChild(p);
+  }
+}
+
+// ============================================
+// 页面导航
+// ============================================
+function navigate(page, data) {
+  State.previousPage = State.currentPage;
+  State.currentPage = page;
+  if (data) State.gameData = data;
+  render();
+}
+
+// ============================================
+// 主渲染函数
+// ============================================
+function render() {
+  const app = document.getElementById('app');
+  const page = State.currentPage;
+
+  // 主题切换
+  if (State.darkMode) {
+    document.documentElement.classList.add('dark');
+    document.body.classList.remove('light-mode');
+  } else {
+    document.documentElement.classList.remove('dark');
+    document.body.classList.add('light-mode');
+  }
+
+  let html = '';
+  switch (page) {
+    case 'welcome': html = renderWelcome(); break;
+    case 'home': html = renderHome(); break;
+    case 'games': html = renderGames(); break;
+    case 'categories': html = renderCategories(); break;
+    case 'leaderboard': html = renderLeaderboard(); break;
+    case 'profile': html = renderProfile(); break;
+    case 'settings': html = renderSettings(); break;
+    case 'rewards': html = renderRewards(); break;
+    case 'certificates': html = renderCertificates(); break;
+    case 'game_select': html = renderGameSelect(); break;
+    case 'playing': html = renderPlaying(); break;
+    case 'game_result': html = renderGameResult(); break;
+    case 'daily_challenge': html = renderDailyChallenge(); break;
+    case 'spin_wheel': html = renderSpinWheel(); break;
+    case 'memory_game': html = renderMemoryGame(); break;
+    case 'math_battle': html = renderMathBattle(); break;
+    case 'time_attack': html = renderTimeAttack(); break;
+    case 'true_false': html = renderTrueFalse(); break;
+    case 'parent_dashboard': html = renderParentDashboard(); break;
+    case 'teacher_dashboard': html = renderTeacherDashboard(); break;
+    default: html = renderHome();
+  }
+
+  app.innerHTML = `<div class="page-enter">${html}</div>`;
+
+  // 绑定事件
+  setTimeout(() => bindEvents(), 50);
+}
+
+// ============================================
+// 欢迎页
+// ============================================
+function renderWelcome() {
+  return `
+    <div class="min-h-screen flex flex-col items-center justify-center px-6 safe-top safe-bottom">
+      <!-- Logo -->
+      <div class="text-center mb-10">
+        <div class="w-24 h-24 mx-auto mb-6 rounded-3xl flex items-center justify-center text-4xl"
+             style="background: linear-gradient(135deg, #7c3aed, #06b6d4); box-shadow: 0 20px 60px rgba(124,58,237,0.4);">
+          <i class="fa-solid fa-brain text-white"></i>
+        </div>
+        <h1 class="font-display text-4xl font-bold mb-2" style="background: linear-gradient(135deg, #06b6d4, #7c3aed, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          MindQuest
+        </h1>
+        <p class="font-display text-lg" style="color: var(--text-muted);">${t('playLearnGrow')}</p>
+      </div>
+
+      <!-- 表单 -->
+      <div class="w-full max-w-sm glass-strong p-6" style="border: 1px solid var(--card-border);">
+        <div class="space-y-4">
+          <div>
+            <label class="text-sm font-medium mb-1.5 block" style="color: var(--text-muted);">${t('enterName')}</label>
+            <input id="inp_name" type="text" class="input-field" placeholder="e.g. Aarav" maxlength="30" autocomplete="off">
+          </div>
+          <div>
+            <label class="text-sm font-medium mb-1.5 block" style="color: var(--text-muted);">${t('enterAge')}</label>
+            <input id="inp_age" type="number" class="input-field" placeholder="e.g. 10" min="3" max="100" autocomplete="off">
+          </div>
+          <div>
+            <label class="text-sm font-medium mb-1.5 block" style="color: var(--text-muted);">${t('enterClass')}</label>
+            <input id="inp_class" type="text" class="input-field" placeholder="e.g. 5th Grade" maxlength="20" autocomplete="off">
+          </div>
+
+          <!-- 头像选择 -->
+          <div>
+            <label class="text-sm font-medium mb-2 block" style="color: var(--text-muted);">Choose Avatar</label>
+            <div class="grid grid-cols-6 gap-2" id="avatar_grid">
+              ${Avatars.map((a, i) => `
+                <div class="avatar-opt w-11 h-11 rounded-xl flex items-center justify-center text-xl cursor-pointer transition-all hover:scale-110"
+                     data-idx="${i}"
+                     style="background: ${i === 0 ? a.color + '33' : 'var(--glass)'}; border: 2px solid ${i === 0 ? a.color : 'transparent'};">
+                  ${a.emoji}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <button id="btn_lets_go" class="btn-glow w-full py-4 rounded-2xl font-display font-semibold text-lg text-white mt-2"
+                  style="background: linear-gradient(135deg, #7c3aed, #06b6d4);">
+            ${t('letsGo')} <i class="fa-solid fa-arrow-right ml-2"></i>
+          </button>
+        </div>
+      </div>
+
+      <p class="text-xs mt-6 text-center" style="color: var(--text-muted); opacity: 0.5;">
+        Made with <i class="fa-solid fa-heart" style="color: #ec4899;"></i> for curious minds
+      </p>
+    </div>
+  `;
+}
+
+// ============================================
+// 首页
+// ============================================
+function renderHome() {
+  const u = State.user;
+  const categories = getCategories();
+  const xpNeeded = getXpForLevel(u.level);
+  const xpPercent = Math.round((u.xp / xpNeeded) * 100);
+  const group = getAgeGroup(u.age);
+  const avatar = Avatars.find(a => a.id === u.avatar) || Avatars[0];
+
+  // 获取最近游戏
+  const recentGames = u.gameHistory?.slice(0, 3) || [];
+
+  return `
+    <div class="safe-top safe-bottom pb-4">
+      <!-- 顶部栏 -->
+      <div class="flex items-center justify-between px-5 py-3">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-xl" style="background: ${avatar.color}33; border: 2px solid ${avatar.color};">
+            ${avatar.emoji}
+          </div>
+          <div>
+            <p class="text-xs" style="color: var(--text-muted);">Welcome back,</p>
+            <p class="font-display font-semibold text-base">${u.name}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="navigate('settings')" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+            <i class="fa-solid fa-gear" style="color: var(--text-muted);"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 统计栏 -->
+      <div class="flex gap-2 px-5 mb-4">
+        <div class="flex-1 glass-sm p-3 flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(124,58,237,0.2);">
+            <i class="fa-solid fa-bolt text-xs" style="color: #7c3aed;"></i>
+          </div>
+          <div>
+            <p class="text-xs" style="color: var(--text-muted);">${t('xp')}</p>
+            <p class="font-display font-bold text-sm">${u.xp}/${xpNeeded}</p>
+          </div>
+        </div>
+        <div class="flex-1 glass-sm p-3 flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(245,158,11,0.2);">
+            <i class="fa-solid fa-coins text-xs" style="color: #f59e0b;"></i>
+          </div>
+          <div>
+            <p class="text-xs" style="color: var(--text-muted);">${t('coins')}</p>
+            <p class="font-display font-bold text-sm">${u.coins}</p>
+          </div>
+        </div>
+        <div class="flex-1 glass-sm p-3 flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background: rgba(239,68,68,0.2);">
+            <i class="fa-solid fa-fire text-xs" style="color: #ef4444;"></i>
+          </div>
+          <div>
+            <p class="text-xs" style="color: var(--text-muted);">${t('streak')}</p>
+            <p class="font-display font-bold text-sm">${u.streak || 0}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 等级进度条 -->
+      <div class="px-5 mb-5">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="font-display font-semibold text-sm">${t('level')} ${u.level}</span>
+          <span class="text-xs" style="color: var(--text-muted);">${xpPercent}%</span>
+        </div>
+        <div class="h-2.5 rounded-full overflow-hidden" style="background: var(--glass);">
+          <div class="progress-fill h-full rounded-full" style="width: ${xpPercent}%; background: linear-gradient(90deg, #7c3aed, #06b6d4);"></div>
+        </div>
+      </div>
+
+      <!-- 每日挑战横幅 -->
+      <div class="px-5 mb-5">
+        <div onclick="navigate('daily_challenge')" class="glass p-4 cursor-pointer card-hover" style="background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(6,182,212,0.2)); border: 1px solid rgba(124,58,237,0.35);">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <i class="fa-solid fa-calendar-star" style="color: #f59e0b;"></i>
+                <span class="font-display font-semibold">${t('dailyChallenge')}</span>
+              </div>
+              <p class="text-xs" style="color: var(--text-muted);">Earn bonus XP and coins!</p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center pulse-glow" style="background: linear-gradient(135deg, #f59e0b, #f97316);">
+              <i class="fa-solid fa-star text-white text-lg"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 快速游戏 -->
+      <div class="px-5 mb-5">
+        <h2 class="font-display font-semibold text-base mb-3">Quick Play</h2>
+        <div class="scroll-x flex gap-3 pb-2">
+          ${[
+            { type: 'spin_wheel', icon: 'fa-dharmachakra', color: '#10b981', label: t('spinTheWheel') },
+            { type: 'memory_game', icon: 'fa-clone', color: '#ec4899', label: t('memoryMatch') },
+            { type: 'math_battle', icon: 'fa-bolt', color: '#f59e0b', label: t('mathBattle') },
+            { type: 'time_attack', icon: 'fa-stopwatch', color: '#ef4444', label: t('timeAttack') },
+            { type: 'true_false', icon: 'fa-check-double', color: '#8b5cf6', label: t('trueOrFalse') },
+          ].map(g => `
+            <div onclick="navigate('${g.type}')" class="flex-shrink-0 glass-sm p-4 cursor-pointer card-hover text-center" style="min-width: 100px;">
+              <div class="w-12 h-12 rounded-2xl mx-auto mb-2 flex items-center justify-center" style="background: ${g.color}22;">
+                <i class="fa-solid ${g.icon} text-lg" style="color: ${g.color};"></i>
+              </div>
+              <p class="text-xs font-medium leading-tight">${g.label}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- 学习世界 -->
+      <div class="px-5 mb-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-display font-semibold text-base">Learning Worlds</h2>
+          <button onclick="navigate('categories')" class="text-xs font-medium" style="color: var(--accent);">See All <i class="fa-solid fa-chevron-right text-[10px]"></i></button>
+        </div>
+        <div class="scroll-x flex gap-3 pb-2">
+          ${[...new Set(categories.map(c => c.world))].map(world => {
+            const worldCats = categories.filter(c => c.world === world);
+            const locked = world > Math.floor(u.level / 3) + 1;
+            return `
+              <div onclick="${locked ? '' : `navigate('categories', {world: ${world}})`}" class="flex-shrink-0 glass p-4 cursor-pointer card-hover ${locked ? 'opacity-50' : ''}" style="min-width: 200px; ${!locked ? 'background: linear-gradient(135deg, ' + worldCats[0].color + '15, ' + worldCats[worldCats.length-1].color + '10);' : ''}">
+                <div class="flex items-center gap-3 mb-2">
+                  <div class="w-10 h-10 rounded-xl flex items-center justify-center font-display font-bold text-lg"
+                       style="background: ${locked ? 'var(--glass)' : worldCats[0].color + '33'}; color: ${locked ? 'var(--text-muted)' : worldCats[0].color};">
+                    ${locked ? '<i class="fa-solid fa-lock text-sm"></i>' : world}
+                  </div>
+                  <div>
+                    <p class="font-display font-semibold text-sm">${t('world')} ${world}</p>
+                    <p class="text-xs" style="color: var(--text-muted);">${worldCats.length} topics</p>
+                  </div>
+                </div>
+                <div class="flex gap-1.5">
+                  ${worldCats.slice(0, 4).map(c => `
+                    <div class="w-7 h-7 rounded-lg flex items-center justify-center" style="background: ${c.color}22;">
+                      <i class="fa-solid ${c.icon} text-[10px]" style="color: ${c.color};"></i>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- 最近活动 -->
+      ${recentGames.length > 0 ? `
+        <div class="px-5 mb-5">
+          <h2 class="font-display font-semibold text-base mb-3">${t('recentActivity')}</h2>
+          <div class="space-y-2">
+            ${recentGames.map(g => {
+              const cat = categories.find(c => c.id === g.catId);
+              return `
+                <div class="glass-sm p-3 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: ${cat?.color || '#06b6d4'}22;">
+                      <i class="fa-solid ${cat?.icon || 'fa-gamepad'} text-sm" style="color: ${cat?.color || '#06b6d4'};"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium">${cat?.name || g.catId}</p>
+                      <p class="text-xs" style="color: var(--text-muted);">${g.correct}/${g.total} correct</p>
+                    </div>
+                  </div>
+                  <div class="font-display font-bold text-sm" style="color: ${g.score >= 70 ? '#10b981' : g.score >= 40 ? '#f59e0b' : '#ef4444'};">${g.score}%</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- 特色游戏 -->
+      <div class="px-5 mb-5">
+        <h2 class="font-display font-semibold text-base mb-3">${t('games')}</h2>
+        <div class="grid grid-cols-2 gap-3">
+          ${categories.slice(0, 6).map(cat => {
+            const prog = u.categoryProgress?.[cat.id];
+            return `
+              <div onclick="navigate('game_select', {catId: '${cat.id}'})" class="glass p-4 cursor-pointer card-hover">
+                <div class="w-11 h-11 rounded-2xl mb-3 flex items-center justify-center" style="background: ${cat.color}22;">
+                  <i class="fa-solid ${cat.icon}" style="color: ${cat.color};"></i>
+                </div>
+                <p class="font-display font-semibold text-sm mb-1">${cat.name}</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-xs" style="color: var(--text-muted);">${prog ? prog.played + ' played' : 'New'}</span>
+                  ${prog ? `<span class="text-xs font-medium" style="color: ${cat.color};">${prog.bestScore}%</span>` : ''}
+                </div>
+                ${prog ? `
+                  <div class="h-1.5 rounded-full mt-2 overflow-hidden" style="background: var(--glass);">
+                    <div class="h-full rounded-full" style="width: ${prog.bestScore}%; background: ${cat.color};"></div>
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      ${renderBottomNav('home')}
+    </div>
+  `;
+}
+
+// ============================================
+// 游戏分类选择
+// ============================================
+function renderCategories() {
+  const categories = getCategories();
+  const worldFilter = State.gameData?.world;
+  const filtered = worldFilter ? categories.filter(c => c.world === worldFilter) : categories;
+
+  return `
+    <div class="safe-top safe-bottom">
+      <!-- 顶部 -->
+      <div class="flex items-center gap-3 px-5 py-3">
+        <button onclick="navigate('home')" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+        <h1 class="font-display font-bold text-lg flex-1">${t('categories')}</h1>
+      </div>
+
+      <!-- 搜索 -->
+      <div class="px-5 mb-4">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-sm" style="color: var(--text-muted);"></i>
+          <input id="search_categories" type="text" class="search-box pl-10" placeholder="${t('search')}" value="${State.searchQuery}">
+        </div>
+      </div>
+
+      <!-- 世界筛选 -->
+      <div class="px-5 mb-4">
+        <div class="scroll-x flex gap-2 pb-1">
+          <button onclick="State.searchQuery=''; navigate('categories')" class="flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all ${!worldFilter ? 'text-white' : ''}"
+                  style="${!worldFilter ? 'background: linear-gradient(135deg, #7c3aed, #06b6d4);' : 'background: var(--glass); border: 1px solid var(--card-border); color: var(--text-muted);'}">
+            All
+          </button>
+          ${[...new Set(categories.map(c => c.world))].map(w => `
+            <button onclick="State.searchQuery=''; navigate('categories', {world: ${w}})" class="flex-shrink-0 px-4 py-2 rounded-xl text-xs font-medium transition-all ${worldFilter === w ? 'text-white' : ''}"
+                    style="${worldFilter === w ? 'background: linear-gradient(135deg, #7c3aed, #06b6d4);' : 'background: var(--glass); border: 1px solid var(--card-border); color: var(--text-muted);'}">
+              ${t('world')} ${w}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- 分类列表 -->
+      <div class="px-5 space-y-3">
+        ${filtered.map(cat => {
+          const prog = State.user.categoryProgress?.[cat.id];
+          const questions = getQuestions(cat.id);
+          return `
+            <div onclick="navigate('game_select', {catId: '${cat.id}'})" class="glass p-4 cursor-pointer card-hover">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background: ${cat.color}22;">
+                  <i class="fa-solid ${cat.icon} text-xl" style="color: ${cat.color};"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-display font-semibold mb-0.5">${cat.name}</p>
+                  <p class="text-xs mb-2" style="color: var(--text-muted);">${questions.length} ${t('questions')} ${prog ? '· ' + prog.played + ' ' + t('gamesPlayed') : '· New'}</p>
+                  <div class="h-1.5 rounded-full overflow-hidden" style="background: var(--glass);">
+                    <div class="progress-fill h-full rounded-full" style="width: ${prog ? prog.bestScore : 0}%; background: ${cat.color};"></div>
+                  </div>
+                </div>
+                <div class="text-right flex-shrink-0">
+                  ${prog ? `<p class="font-display font-bold text-lg" style="color: ${cat.color};">${prog.bestScore}%</p>` : '<i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>'}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+
+      ${renderBottomNav('categories')}
+    </div>
+  `;
+}
+
+// ============================================
+// 游戏选择（选择难度和游戏类型）
+// ============================================
+function renderGameSelect() {
+  const catId = State.gameData?.catId;
+  const categories = getCategories();
+  const cat = categories.find(c => c.id === catId);
+  if (!cat) return renderHome();
+  const questions = getQuestions(catId);
+
+  return `
+    <div class="safe-top safe-bottom">
+      <div class="flex items-center gap-3 px-5 py-3">
+        <button onclick="navigate('categories')" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+        <h1 class="font-display font-bold text-lg flex-1">${cat.name}</h1>
+      </div>
+
+      <!-- 分类头部 -->
+      <div class="px-5 mb-5">
+        <div class="glass p-5" style="background: linear-gradient(135deg, ${cat.color}15, ${cat.color}08);">
+          <div class="flex items-center gap-4">
+            <div class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background: ${cat.color}22;">
+              <i class="fa-solid ${cat.icon} text-2xl" style="color: ${cat.color};"></i>
+            </div>
+            <div>
+              <p class="font-display font-bold text-xl mb-1">${cat.name}</p>
+              <p class="text-sm" style="color: var(--text-muted);">${questions.length} questions available</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 难度选择 -->
+      <div class="px-5 mb-5">
+        <h2 class="font-display font-semibold text-base mb-3">Select Difficulty</h2>
+        <div class="grid grid-cols-4 gap-2" id="difficulty_grid">
+          ${['easy', 'medium', 'hard', 'expert'].map((d, i) => {
+            const colors = ['#10b981', '#f59e0b', '#f97316', '#ef4444'];
+            return `
+              <div class="diff-opt glass-sm p-3 text-center cursor-pointer card-hover" data-diff="${d}"
+                   style="${i === 0 ? `border: 2px solid ${colors[i]}; background: ${colors[i]}15;` : ''}">
+                <i class="fa-solid ${['fa-leaf', 'fa-fire', 'fa-skull-crossbones', 'fa-crown'][i]} text-lg mb-1" style="color: ${colors[i]};"></i>
+                <p class="text-xs font-medium">${t(d)}</p>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- 游戏类型 -->
+      <div class="px-5 mb-5">
+        <h2 class="font-display font-semibold text-base mb-3">Game Mode</h2>
+        <div class="grid grid-cols-2 gap-3" id="gametype_grid">
+          ${[
+            { type: 'mcq', ...GameTypes.mcq },
+            { type: 'time_attack', ...GameTypes.time_attack },
+            { type: 'true_false', ...GameTypes.true_false },
+            { type: 'memory_game', ...GameTypes.memory },
+            { type: 'math_battle', ...GameTypes.math_battle },
+            { type: 'spin_wheel', ...GameTypes.spin },
+          ].map((g, i) => `
+            <div class="gametype-opt glass-sm p-4 cursor-pointer card-hover" data-type="${g.type}"
+                 style="${i === 0 ? `border: 2px solid ${g.color}; background: ${g.color}10;` : ''}">
+              <div class="w-10 h-10 rounded-xl mb-2 flex items-center justify-center" style="background: ${g.color}22;">
+                <i class="fa-solid ${g.icon}" style="color: ${g.color};"></i>
+              </div>
+              <p class="text-sm font-medium">${g.name}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- 开始按钮 -->
+      <div class="px-5">
+        <button id="btn_start_game" class="btn-glow w-full py-4 rounded-2xl font-display font-semibold text-lg text-white"
+                style="background: linear-gradient(135deg, ${cat.color}, #7c3aed);">
+          ${t('start')} <i class="fa-solid fa-play ml-2"></i>
+        </button>
+      </div>
+
+      ${renderBottomNav('games')}
+    </div>
+  `;
+}
+
+// ============================================
+// MCQ 游戏主逻辑
+// ============================================
+let mcqState = { questions: [], current: 0, score: 0, answered: false, selectedIdx: -1, startTime: 0, difficulty: 'easy' };
+
+function startMCQGame(catId, difficulty, questionCount) {
+  const allQ = getQuestions(catId);
+  const shuffled = [...allQ].sort(() => Math.random() - 0.5);
+  const count = Math.min(questionCount || 5, shuffled.length);
+  mcqState = {
+    questions: shuffled.slice(0, count),
+    current: 0,
+    score: 0,
+    answered: false,
+    selectedIdx: -1,
+    startTime: Date.now(),
+    difficulty: difficulty || 'easy',
+    catId: catId,
+  };
+  navigate('playing');
+}
+
+function renderPlaying() {
+  const s = mcqState;
+  if (!s.questions.length) return renderHome();
+  const q = s.questions[s.current];
+  const total = s.questions.length;
+  const progress = ((s.current) / total) * 100;
+  const timeElapsed = Math.floor((Date.now() - s.startTime) / 1000);
+  const minutes = Math.floor(timeElapsed / 60);
+  const seconds = timeElapsed % 60;
+
+  return `
+    <div class="safe-top safe-bottom min-h-screen flex flex-col">
+      <!-- 顶部栏 -->
+      <div class="flex items-center gap-3 px-5 py-3">
+        <button onclick="navigate('game_select', {catId: '${s.catId}'})" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+        <div class="flex-1">
+          <div class="h-2 rounded-full overflow-hidden" style="background: var(--glass);">
+            <div class="progress-fill h-full rounded-full" style="width: ${progress}%; background: linear-gradient(90deg, #7c3aed, #06b6d4);"></div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl" style="background: var(--glass);">
+          <i class="fa-solid fa-clock text-xs" style="color: var(--accent);"></i>
+          <span class="text-xs font-medium">${minutes}:${seconds.toString().padStart(2, '0')}</span>
+        </div>
+      </div>
+
+      <!-- 题号 -->
+      <div class="px-5 mb-4">
+        <span class="text-xs font-medium px-3 py-1 rounded-full" style="background: var(--glass); color: var(--text-muted);">
+          ${s.current + 1} / ${total}
+        </span>
+        <span class="text-xs ml-2 px-3 py-1 rounded-full" style="background: ${s.difficulty === 'easy' ? 'rgba(16,185,129,0.15)' : s.difficulty === 'medium' ? 'rgba(245,158,11,0.15)' : s.difficulty === 'hard' ? 'rgba(249,115,22,0.15)' : 'rgba(239,68,68,0.15)'}; color: ${s.difficulty === 'easy' ? '#10b981' : s.difficulty === 'medium' ? '#f59e0b' : s.difficulty === 'hard' ? '#f97316' : '#ef4444'};">
+          ${t(s.difficulty)}
+        </span>
+      </div>
+
+      <!-- 问题 -->
+      <div class="flex-1 px-5 flex flex-col">
+        <div class="glass-strong p-6 mb-5" style="border: 1px solid var(--card-border);">
+          <p class="font-display font-semibold text-lg leading-relaxed">${q.q}</p>
+        </div>
+
+        <!-- 选项 -->
+        <div class="space-y-3 mb-4" id="options_container">
+          ${q.options.map((opt, i) => {
+            let cls = 'option-btn';
+            if (s.answered) {
+              if (i === q.answer) cls += ' correct';
+              else if (i === s.selectedIdx && i !== q.answer) cls += ' wrong';
+            }
+            const labels = ['A', 'B', 'C', 'D'];
+            return `
+              <button class="${cls}" data-idx="${i}" ${s.answered ? 'disabled' : ''}>
+                <span class="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0"
+                      style="background: var(--glass); color: var(--accent);">
+                  ${labels[i]}
+                </span>
+                <span>${opt}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
+
+        <!-- 解释 -->
+        ${s.answered ? `
+          <div class="glass-sm p-4 mb-4" style="border-left: 3px solid ${s.selectedIdx === q.answer ? '#10b981' : '#ef4444'};">
+            <p class="text-xs font-semibold mb-1" style="color: ${s.selectedIdx === q.answer ? '#10b981' : '#ef4444'};">
+              <i class="fa-solid ${s.selectedIdx === q.answer ? 'fa-check-circle' : 'fa-times-circle'} mr-1"></i>
+              ${s.selectedIdx === q.answer ? t('correct') : t('wrong')}
+            </p>
+            <p class="text-sm" style="color: var(--text-muted);">${q.explanation}</p>
+          </div>
+        ` : ''}
+
+        <!-- 下一题/完成 按钮 -->
+        ${s.answered ? `
+          <button id="btn_next_q" class="btn-glow w-full py-4 rounded-2xl font-display font-semibold text-lg text-white mt-auto mb-4"
+                  style="background: linear-gradient(135deg, #7c3aed, #06b6d4);">
+            ${s.current < total - 1 ? t('next') + ' <i class="fa-solid fa-arrow-right ml-2"></i>' : t('finish') + ' <i class="fa-solid fa-flag-checkered ml-2"></i>'}
+          </button>
+        ` : '<div class="mt-auto mb-4"></div>'}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// 游戏结果
+// ============================================
+function renderGameResult() {
+  const d = State.gameData;
+  if (!d) return renderHome();
+  const score = d.correct / d.total;
+  const stars = score >= 0.9 ? 3 : score >= 0.6 ? 2 : score > 0 ? 1 : 0;
+  const xpEarned = d.correct * 15 * (d.difficulty === 'easy' ? 1 : d.difficulty === 'medium' ? 1.5 : d.difficulty === 'hard' ? 2 : 3);
+  const coinsEarned = Math.round(d.correct * 5 * (d.difficulty === 'easy' ? 1 : d.difficulty === 'medium' ? 1.5 : d.difficulty === 'hard' ? 2 : 3));
+
+  return `
+    <div class="min-h-screen flex flex-col items-center justify-center px-6 safe-top safe-bottom">
+      <div class="text-center mb-8">
+        <!-- 星星 -->
+        <div class="flex items-center justify-center gap-3 mb-6">
+          ${[0, 1, 2].map(i => `
+            <i class="fa-solid fa-star text-4xl star ${i < stars ? 'filled' : 'empty'}" style="animation-delay: ${i * 0.2}s;"></i>
+          `).join('')}
+        </div>
+
+        <h1 class="font-display text-3xl font-bold mb-2" style="color: ${stars >= 2 ? '#10b981' : stars === 1 ? '#f59e0b' : '#ef4444'};">
+          ${stars >= 2 ? t('congratulations') : stars === 1 ? 'Good Try!' : 'Keep Practicing!'}
+        </h1>
+        <p class="text-sm" style="color: var(--text-muted);">${d.correct} out of ${d.total} correct</p>
+      </div>
+
+      <!-- 分数圆环 -->
+      <div class="w-36 h-36 rounded-full flex items-center justify-center mb-8 relative" style="background: conic-gradient(${stars >= 2 ? '#10b981' : stars === 1 ? '#f59e0b' : '#ef4444'} ${score * 360}deg, var(--glass) 0deg);">
+        <div class="w-28 h-28 rounded-full flex flex-col items-center justify-center" style="background: var(--bg);">
+          <span class="font-display text-3xl font-bold">${Math.round(score * 100)}%</span>
+          <span class="text-xs" style="color: var(--text-muted);">${t('score')}</span>
+        </div>
+      </div>
+
+      <!-- 奖励 -->
+      <div class="flex gap-4 mb-8">
+        <div class="glass-sm p-4 text-center" style="min-width: 100px;">
+          <i class="fa-solid fa-bolt mb-1" style="color: #7c3aed;"></i>
+          <p class="font-display font-bold text-lg">+${Math.round(xpEarned)}</p>
+          <p class="text-xs" style="color: var(--text-muted);">${t('xp')}</p>
+        </div>
+        <div class="glass-sm p-4 text-center" style="min-width: 100px;">
+          <i class="fa-solid fa-coins mb-1" style="color: #f59e0b;"></i>
+          <p class="font-display font-bold text-lg">+${coinsEarned}</p>
+          <p class="text-xs" style="color: var(--text-muted);">${t('coins')}</p>
+        </div>
+      </div>
+
+      <!-- 按钮 -->
+      <div class="w-full max-w-sm space-y-3">
+        <button onclick="startMCQGame('${d.catId}', '${d.difficulty}', ${d.total})" class="btn-glow w-full py-4 rounded-2xl font-display font-semibold text-white"
+                style="background: linear-gradient(135deg, #7c3aed, #06b6d4);">
+          <i class="fa-solid fa-redo mr-2"></i> Play Again
+        </button>
+        <button onclick="navigate('home')" class="btn-glow w-full py-4 rounded-2xl font-display font-semibold"
+                style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-home mr-2"></i> ${t('home')}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// 旋转轮盘
+// ============================================
+let spinState = { spinning: false, prize: -1 };
+
+function renderSpinWheel() {
+  const prizes = [
+    { label: '10 XP', color: '#7c3aed', value: 10, type: 'xp' },
+    { label: '5 Coins', color: '#06b6d4', value: 5, type: 'coins' },
+    { label: '20 XP', color: '#10b981', value: 20, type: 'xp' },
+    { label: 'Try Again', color: '#64748b', value: 0, type: 'none' },
+    { label: '15 Coins', color: '#f59e0b', value: 15, type: 'coins' },
+    { label: '30 XP', color: '#ec4899', value: 30, type: 'xp' },
+    { label: '25 Coins', color: '#f97316', value: 25, type: 'coins' },
+    { label: '50 XP', color: '#ef4444', value: 50, type: 'xp' },
+  ];
+
+  const segments = prizes.length;
+  const anglePerSegment = 360 / segments;
+
+  let segmentsHTML = '';
+  prizes.forEach((p, i) => {
+    const startAngle = i * anglePerSegment;
+    const endAngle = (i + 1) * anglePerSegment;
+    const midAngle = startAngle + anglePerSegment / 2;
+    segmentsHTML += `
+      <div style="position: absolute; width: 100%; height: 100%; transform: rotate(${startAngle}deg); clip-path: polygon(50% 50%, ${50 + 50 * Math.cos(startAngle * Math.PI / 180)}% ${50 + 50 * Math.sin(startAngle * Math.PI / 180)}%, ${50 + 50 * Math.cos(endAngle * Math.PI / 180)}% ${50 + 50 * Math.sin(endAngle * Math.PI / 180)}%); background: ${p.color};"></div>
+      <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(${midAngle}deg) translateY(-55px); transform-origin: center; color: white; font-size: 10px; font-weight: 700; font-family: 'Fredoka', sans-serif; white-space: nowrap;">${p.label}</div>
+    `;
+  });
+
+  return `
+    <div class="safe-top safe-bottom min-h-screen flex flex-col">
+      <div class="flex items-center gap-3 px-5 py-3">
+        <button onclick="navigate('home')" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+        <h1 class="font-display font-bold text-lg flex-1">${t('spinTheWheel')}</h1>
+      </div>
+
+      <div class="flex-1 flex flex-col items-center justify-center px-5">
+        <!-- 轮盘 -->
+        <div class="relative mb-8" style="width: 280px; height: 280px;">
+          <!-- 指针 -->
+          <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); z-index: 10;">
+            <div style="width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 24px solid #f59e0b; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));"></div>
+          </div>
+          <div id="spin_wheel_inner" class="spin-wheel w-full h-full rounded-full relative overflow-hidden" style="border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 0 40px rgba(124,58,237,0.3);">
+            ${segmentsHTML}
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-16 h-16 rounded-full flex items-center justify-center" style="background: var(--bg); border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+                <i class="fa-solid fa-star text-lg" style="color: #f59e0b;"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 旋转按钮 -->
+        <button id="btn_spin" class="btn-glow px-12 py-4 rounded-2xl font-display font-bold text-lg text-white ${spinState.spinning ? 'opacity-50 pointer-events-none' : ''}"
+                style="background: linear-gradient(135deg, #f59e0b, #f97316); box-shadow: 0 10px 30px rgba(245,158,11,0.3);">
+          <i class="fa-solid fa-dharmachakra mr-2"></i> SPIN!
+        </button>
+
+        ${spinState.prize >= 0 ? `
+          <div class="glass-strong p-4 mt-6 text-center achievement-unlock" style="border: 1px solid ${prizes[spinState.prize].color};">
+            <p class="font-display font-bold text-lg" style="color: ${prizes[spinState.prize].color};">
+              ${prizes[spinState.prize].value > 0 ? `You won ${prizes[spinState.prize].label}!` : 'Better luck next time!'}
+            </p>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// 记忆游戏
+// ============================================
+let memoryState = { cards: [], flipped: [], matched: [], moves: 0, canFlip: true, startTime: 0, pairs: 6 };
+
+function initMemoryGame() {
+  const emojis = ['🦊', '🦁', '🐼', '🦄', '🐙', '🦋', '🐬', '🦅', '🐸', '🐲', '🦉', '🐻'];
+  const selected = emojis.sort(() => Math.random() - 0.5).slice(0, memoryState.pairs);
+  const pairs = [...selected, ...selected].sort(() => Math.random() - 0.5);
+  memoryState.cards = pairs;
+  memoryState.flipped = [];
+  memoryState.matched = [];
+  memoryState.moves = 0;
+  memoryState.canFlip = true;
+  memoryState.startTime = Date.now();
+}
+
+function renderMemoryGame() {
+  if (!memoryState.cards.length) initMemoryGame();
+  const cols = memoryState.pairs <= 6 ? 4 : 4;
+  const timeElapsed = Math.floor((Date.now() - memoryState.startTime) / 1000);
+
+  return `
+    <div class="safe-top safe-bottom min-h-screen flex flex-col">
+      <div class="flex items-center gap-3 px-5 py-3">
+        <button onclick="navigate('home')" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+        <h1 class="font-display font-bold text-lg flex-1">${t('memoryMatch')}</h1>
+        <div class="flex items-center gap-3">
+          <span class="text-xs font-medium px-3 py-1.5 rounded-xl" style="background: var(--glass);">
+            <i class="fa-solid fa-arrows-rotate mr-1" style="color: var(--accent);"></i>${memoryState.moves}
+          </span>
+          <span class="text-xs font-medium px-3 py-1.5 rounded-xl" style="background: var(--glass);">
+            <i class="fa-solid fa-clock mr-1" style="color: var(--accent);"></i>${timeElapsed}s
+          </span>
+        </div>
+      </div>
+
+      <div class="flex-1 flex items-center justify-center px-5 py-4">
+        <div class="grid gap-2.5" style="grid-template-columns: repeat(${cols}, 1fr); max-width: 360px; width: 100%;">
+          ${memoryState.cards.map((card, i) => {
+            const isFlipped = memoryState.flipped.includes(i) || memoryState.matched.includes(i);
+            const isMatched = memoryState.matched.includes(i);
+            return `
+              <div class="memory-card ${isFlipped ? 'flipped' : ''}" onclick="flipMemoryCard(${i})" style="aspect-ratio: 1;">
+                <div class="memory-card-inner w-full h-full">
+                  <div class="memory-card-front" style="background: linear-gradient(135deg, #7c3aed, #06b6d4); border: 2px solid rgba(255,255,255,0.1);">
+                    <i class="fa-solid fa-question text-white text-lg"></i>
+                  </div>
+                  <div class="memory-card-back" style="background: ${isMatched ? 'rgba(16,185,129,0.2)' : 'var(--card)'}; border: 2px solid ${isMatched ? '#10b981' : 'var(--card-border)'};">
+                    <span class="text-3xl">${card}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      ${memoryState.matched.length === memoryState.cards.length ? `
+        <div class="px-5 pb-6">
+          <div class="glass-strong p-5 text-center">
+            <h2 class="font-display font-bold text-xl mb-2" style="color: #10b981;">${t('congratulations')}</h2>
+            <p class="text-sm mb-4" style="color: var(--text-muted);">Completed in ${memoryState.moves} moves and ${timeElapsed}s</p>
+            <div class="flex gap-3">
+              <button onclick="memoryState.cards=[]; render();" class="btn-glow flex-1 py-3 rounded-xl font-display font-semibold text-white"
+                      style="background: linear-gradient(135deg, #7c3aed, #06b6d4);">
+                Play Again
+              </button>
+              <button onclick="navigate('home')" class="btn-glow flex-1 py-3 rounded-xl font-display font-semibold" style="background: var(--glass); border: 1px solid var(--card-border);">
+                Home
+              </button>
+            </div>
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function flipMemoryCard(idx) {
+  if (!memoryState.canFlip) return;
+  if (memoryState.flipped.includes(idx) || memoryState.matched.includes(idx)) return;
+
+  AudioSystem.click();
+  memoryState.flipped.push(idx);
+  render();
+
+  if (memoryState.flipped.length === 2) {
+    memoryState.moves++;
+    memoryState.canFlip = false;
+    const [a, b] = memoryState.flipped;
+    if (memoryState.cards[a] === memoryState.cards[b]) {
+      AudioSystem.correct();
+      memoryState.matched.push(a, b);
+      memoryState.flipped = [];
+      memoryState.canFlip = true;
+      addXp(10);
+      addCoins(3);
+      setTimeout(() => render(), 300);
+    } else {
+      AudioSystem.wrong();
+      setTimeout(() => {
+        memoryState.flipped = [];
+        memoryState.canFlip = true;
+        render();
+      }, 800);
+    }
+  }
+}
+
+// ============================================
+// 数学战斗
+// ============================================
+let mathBattleState = { current: null, score: 0, round: 0, totalRounds: 10, timeLeft: 15, timer: null, answered: false, streak: 0 };
+
+function generateMathProblem() {
+  const ops = ['+', '-', '×'];
+  const op = ops[Math.floor(Math.random() * ops.length)];
+  let a, b, answer;
+  switch (op) {
+    case '+': a = Math.floor(Math.random() * 50) + 1; b = Math.floor(Math.random() * 50) + 1; answer = a + b; break;
+    case '-': a = Math.floor(Math.random() * 50) + 10; b = Math.floor(Math.random() * a) + 1; answer = a - b; break;
+    case '×': a = Math.floor(Math.random() * 12) + 2; b = Math.floor(Math.random() * 12) + 2; answer = a * b; break;
+  }
+  // 生成干扰选项
+  const options = new Set([answer]);
+  while (options.size < 4) {
+    const offset = Math.floor(Math.random() * 20) - 10;
+    if (offset !== 0) options.add(answer + offset);
+  }
+  return { q: `${a} ${op} ${b} = ?`, answer, options: [...options].sort(() => Math.random() - 0.5) };
+}
+
+function startMathBattle() {
+  mathBattleState = { current: generateMathProblem(), score: 0, round: 0, totalRounds: 10, timeLeft: 15, timer: null, answered: false, streak: 0 };
+  navigate('math_battle');
+}
+
+function renderMathBattle() {
+  if (!mathBattleState.current) return renderHome();
+  const s = mathBattleState;
+  const progress = (s.round / s.totalRounds) * 100;
+
+  return `
+    <div class="safe-top safe-bottom min-h-screen flex flex-col">
+      <div class="flex items-center gap-3 px-5 py-3">
+        <button onclick="clearInterval(mathBattleState.timer); navigate('home')" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+        <div class="flex-1">
+          <div class="h-2 rounded-full overflow-hidden" style="background: var(--glass);">
+            <div class="progress-fill h-full rounded-full" style="width: ${progress}%; background: linear-gradient(90deg, #f59e0b, #f97316);"></div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-display font-bold" style="background: ${s.timeLeft <= 5 ? 'rgba(239,68,68,0.2)' : 'var(--glass)'}; color: ${s.timeLeft <= 5 ? '#ef4444' : 'var(--text)'};">
+          <i class="fa-solid fa-bolt"></i> ${s.timeLeft}s
+        </div>
+      </div>
+
+      <div class="flex-1 flex flex-col items-center justify-center px-5">
+        <!-- 分数和连击 -->
+        <div class="flex gap-6 mb-8">
+          <div class="text-center">
+            <p class="font-display font-bold text-2xl" style="color: #f59e0b;">${s.score}</p>
+            <p class="text-xs" style="color: var(--text-muted);">${t('score')}</p>
+          </div>
+          <div class="text-center">
+            <p class="font-display font-bold text-2xl" style="color: #ef4444;">${s.streak}</p>
+            <p class="text-xs" style="color: var(--text-muted);">Combo</p>
+          </div>
+          <div class="text-center">
+            <p class="font-display font-bold text-2xl">${s.round + 1}/${s.totalRounds}</p>
+            <p class="text-xs" style="color: var(--text-muted);">${t('round') || 'Round'}</p>
+          </div>
+        </div>
+
+        <!-- 问题 -->
+        <div class="glass-strong p-8 mb-8 w-full max-w-sm text-center" style="border: 1px solid var(--card-border);">
+          <p class="font-display text-4xl font-bold">${s.current.q}</p>
+        </div>
+
+        <!-- 选项 -->
+        <div class="grid grid-cols-2 gap-3 w-full max-w-sm">
+          ${s.current.options.map((opt, i) => {
+            let cls = 'option-btn justify-center text-center font-display font-bold text-lg';
+            if (s.answered) {
+              if (opt === s.current.answer) cls += ' correct';
+              else cls += ' opacity-50';
+            }
+            return `<button class="${cls}" data-math-ans="${opt}" ${s.answered ? 'disabled' : ''}>${opt}</button>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// 时间攻击
+// ============================================
+let timeAttackState = { questions: [], current: 0, score: 0, timeLeft: 60, timer: null, answered: false, catId: null };
+
+function startTimeAttack() {
+  const allCats = getCategories();
+  const allQ = [];
+  allCats.forEach(c => {
+    const qs = getQuestions(c.id);
+    allQ.push(...qs.map(q => ({ ...q, catId: c.id, catName: c.name, catColor: c.color })));
+  });
+  const shuffled = allQ.sort(() => Math.random() - 0.5).slice(0, 20);
+  timeAttackState = { questions: shuffled, current: 0, score: 0, timeLeft: 60, timer: null, answered: false, catId: shuffled[0]?.catId };
+  navigate('time_attack');
+}
+
+function renderTimeAttack() {
+  const s = timeAttackState;
+  if (!s.questions.length) return renderHome();
+  const q = s.questions[s.current];
+
+  return `
+    <div class="safe-top safe-bottom min-h-screen flex flex-col">
+      <div class="flex items-center gap-3 px-5 py-3">
+        <button onclick="clearInterval(timeAttackState.timer); navigate('home')" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+        <div class="flex-1">
+          <div class="h-2 rounded-full overflow-hidden" style="background: var(--glass);">
+            <div class="h-full rounded-full transition-all duration-1000" style="width: ${(s.timeLeft / 60) * 100}%; background: ${s.timeLeft <= 10 ? '#ef4444' : s.timeLeft <= 20 ? '#f59e0b' : '#10b981'};"></div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-display font-bold" style="background: ${s.timeLeft <= 10 ? 'rgba(239,68,68,0.2)' : 'var(--glass)'}; color: ${s.timeLeft <= 10 ? '#ef4444' : 'var(--text)'};">
+          <i class="fa-solid fa-stopwatch"></i> ${s.timeLeft}s
+        </div>
+      </div>
+
+      <div class="flex-1 flex flex-col px-5 pt-4">
+        <!-- 分数 -->
+        <div class="flex items-center justify-between mb-4">
+          <span class="text-xs font-medium px-3 py-1.5 rounded-xl" style="background: ${q.catColor}22; color: ${q.catColor};">${q.catName}</span>
+          <span class="font-display font-bold text-lg">${t('score')}: ${s.score}</span>
+        </div>
+
+        <!-- 问题 -->
+        <div class="glass-strong p-6 mb-5" style="border: 1px solid var(--card-border);">
+          <p class="font-display font-semibold text-lg">${q.q}</p>
+        </div>
+
+        <!-- 选项 -->
+        <div class="space-y-3" id="ta_options">
+          ${q.options.map((opt, i) => {
+            let cls = 'option-btn';
+            if (s.answered) {
+              if (i === q.answer) cls += ' correct';
+              else cls += ' opacity-40';
+            }
+            return `<button class="${cls}" data-ta-idx="${i}" ${s.answered ? 'disabled' : ''}><span>${opt}</span></button>`;
+          }).join('')}
+        </div>
+
+        ${s.answered ? `
+          <div class="glass-sm p-3 mt-3">
+            <p class="text-sm" style="color: var(--text-muted);">${q.explanation}</p>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// 判断对错
+// ============================================
+let tfState = { questions: [], current: 0, score: 0, answered: false };
+
+function startTrueFalse() {
+  const allCats = getCategories();
+  const allQ = [];
+  allCats.forEach(c => {
+    getQuestions(c.id).forEach(q => {
+      allQ.push({ ...q, catName: c.name });
+    });
+  });
+  const shuffled = allQ.sort(() => Math.random() - 0.5).slice(0, 10).map(q => {
+    const isTrue = Math.random() > 0.5;
+    return {
+      statement: isTrue ? q.q : q.q.replace(q.options[q.answer], q.options[(q.answer + 1) % q.options.length]),
+      isTrue,
+      explanation: q.explanation,
+      catName: q.catName
+    };
+  });
+  tfState = { questions: shuffled, current: 0, score: 0, answered: false };
+  navigate('true_false');
+}
+
+function renderTrueFalse() {
+  const s = tfState;
+  if (!s.questions.length) return renderHome();
+  const q = s.questions[s.current];
+
+  return `
+    <div class="safe-top safe-bottom min-h-screen flex flex-col">
+      <div class="flex items-center gap-3 px-5 py-3">
+        <button onclick="navigate('home')" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+        <h1 class="font-display font-bold text-lg flex-1">${t('trueOrFalse')}</h1>
+        <span class="font-display font-bold">${s.current + 1}/${s.questions.length}</span>
+      </div>
+
+      <div class="flex-1 flex flex-col items-center justify-center px-5">
+        <span class="text-xs font-medium px-3 py-1 rounded-full mb-4" style="background: var(--glass); color: var(--text-muted);">${q.catName}</span>
+
+        <div class="glass-strong p-8 mb-8 w-full max-w-sm text-center" style="border: 1px solid var(--card-border);">
+          <p class="font-display text-xl font-semibold leading-relaxed">${q.statement}</p>
+        </div>
+
+        <div class="flex gap-4 w-full max-w-sm mb-6">
+          <button data-tf-ans="true" class="flex-1 py-5 rounded-2xl font-display font-bold text-lg text-white transition-all ${s.answered ? (q.isTrue ? 'ring-4 ring-green-400' : 'opacity-40') : ''}"
+                  style="background: linear-gradient(135deg, #10b981, #059669);" ${s.answered ? 'disabled' : ''}>
+            <i class="fa-solid fa-check mr-2"></i>True
+          </button>
+          <button data-tf-ans="false" class="flex-1 py-5 rounded-2xl font-display font-bold text-lg text-white transition-all ${s.answered ? (!q.isTrue ? 'ring-4 ring-red-400' : 'opacity-40') : ''}"
+                  style="background: linear-gradient(135deg, #ef4444, #dc2626);" ${s.answered ? 'disabled' : ''}>
+            <i class="fa-solid fa-xmark mr-2"></i>False
+          </button>
+        </div>
+
+        ${s.answered ? `
+          <div class="glass-sm p-4 w-full max-w-sm text-center">
+            <p class="text-sm font-medium mb-1" style="color: ${s.lastCorrect ? '#10b981' : '#ef4444'};">
+              ${s.lastCorrect ? t('correct') : t('wrong')}! The statement is ${q.isTrue ? 'TRUE' : 'FALSE'}.
+            </p>
+            <p class="text-sm" style="color: var(--text-muted);">${q.explanation}</p>
+            <button onclick="tfNext()" class="btn-glow w-full py-3 rounded-xl font-display font-semibold text-white mt-4"
+                    style="background: linear-gradient(135deg, #7c3aed, #06b6d4);">
+              ${s.current < s.questions.length - 1 ? t('next') : t('finish')}
+            </button>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function tfNext() {
+  tfState.current++;
+  tfState.answered = false;
+  if (tfState.current >= tfState.questions.length) {
+    const score = tfState.score;
+    addXp(score * 10);
+    addCoins(score * 5);
+    showToast(`Score: ${score}/${tfState.questions.length}`, 'success');
+    navigate('home');
+  } else {
+    render();
+  }
+}
+
+// ============================================
+// 每日挑战
+// ============================================
+function renderDailyChallenge() {
+  const today = new Date().toDateString();
+  const completed = State.user.dailyChallengeDate === today;
+  const categories = getCategories();
+  const allQ = [];
+  categories.forEach(c => {
+    getQuestions(c.id).forEach(q => allQ.push({ ...q, catId: c.id, catName: c.name, catColor: c.color }));
+  });
+  const dailyQ = allQ.sort(() => Math.random() - 0.5).slice(0, 7);
+
+  return `
+    <div class="safe-top safe-bottom min-h-screen flex flex-col">
+      <div class="flex items-center gap-3 px-5 py-3">
+        <button onclick="navigate('home')" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+        <h1 class="font-display font-bold text-lg flex-1">${t('dailyChallenge')}</h1>
+      </div>
+
+      <div class="flex-1 flex flex-col items-center justify-center px-5">
+        <div class="w-24 h-24 rounded-3xl flex items-center justify-center mb-6"
+             style="background: linear-gradient(135deg, #f59e0b, #f97316); box-shadow: 0 20px 40px rgba(245,158,11,0.3);">
+          <i class="fa-solid fa-calendar-day text-white text-3xl"></i>
+        </div>
+
+        <h2 class="font-display text-2xl font-bold mb-2">${t('dailyChallenge')}</h2>
+        <p class="text-sm mb-6 text-center" style="color: var(--text-muted);">7 mixed questions from all categories. Earn 2x XP and coins!</p>
+
+        ${completed ? `
+          <div class="glass-strong p-6 text-center w-full max-w-sm" style="border: 1px solid #10b981;">
+            <i class="fa-solid fa-check-circle text-4xl mb-3" style="color: #10b981;"></i>
+            <p class="font-display font-bold text-lg" style="color: #10b981;">Completed Today!</p>
+            <p class="text-sm mt-1" style="color: var(--text-muted);">Come back tomorrow for a new challenge.</p>
+          </div>
+        ` : `
+          <div class="glass p-4 w-full max-w-sm mb-6">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-medium">Rewards</span>
+            </div>
+            <div class="flex gap-4">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bolt" style="color: #7c3aed;"></i>
+                <span class="font-display font-bold">2x XP</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-coins" style="color: #f59e0b;"></i>
+                <span class="font-display font-bold">2x Coins</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="startDailyChallenge()" class="btn-glow w-full max-w-sm py-4 rounded-2xl font-display font-bold text-lg text-white"
+                  style="background: linear-gradient(135deg, #f59e0b, #f97316); box-shadow: 0 10px 30px rgba(245,158,11,0.3);">
+            ${t('start')} <i class="fa-solid fa-play ml-2"></i>
+          </button>
+        `}
+      </div>
+    </div>
+  `;
+}
+
+function startDailyChallenge() {
+  const categories = getCategories();
+  const allQ = [];
+  categories.forEach(c => {
+    getQuestions(c.id).forEach(q => allQ.push({ ...q, catId: c.id }));
+  });
+  const dailyQ = allQ.sort(() => Math.random() - 0.5).slice(0, 7);
+  mcqState = {
+    questions: dailyQ,
+    current: 0, score: 0, answered: false, selectedIdx: -1,
+    startTime: Date.now(), difficulty: 'medium', catId: dailyQ[0]?.catId,
+    isDaily: true,
+  };
+  navigate('playing');
+}
+
+// ============================================
+// 排行榜
+// ============================================
+function renderLeaderboard() {
+  // 模拟排行榜数据
+  const leaders = [
+    { name: 'Aarav S.', avatar: '🦊', level: 15, xp: 2340, color: '#f97316' },
+    { name: 'Priya K.', avatar: '🦄', level: 14, xp: 2180, color: '#ec4899' },
+    { name: 'Rohan M.', avatar: '🦁', level: 13, xp: 2050, color: '#f59e0b' },
+    { name: 'Ananya R.', avatar: '🦋', level: 12, xp: 1890, color: '#a855f7' },
+    { name: 'Vihaan P.', avatar: '🐲', level: 11, xp: 1720, color: '#ef4444' },
+    { name: 'Ishaan D.', avatar: '🐬', level: 10, xp: 1580, color: '#06b6d4' },
+    { name: 'Meera J.', avatar: '🦅', level: 9, xp: 1420, color: '#8b5cf6' },
+    { name: 'Kabir N.', avatar: '🐼', level: 8, xp: 1280, color: '#64748b' },
+  ];
+
+  const u = State.user;
+  const avatar = Avatars.find(a => a.id === u.avatar) || Avatars[0];
+  const userRank = 4; // 模拟用户排名
+
+  return `
+    <div class="safe-top safe-bottom">
+      <div class="px-5 py-3">
+        <h1 class="font-display font-bold text-xl text-center">${t('leaderboard')}</h1>
+      </div>
+
+      <!-- 前三名 -->
+      <div class="px-5 mb-6">
+        <div class="flex items-end justify-center gap-4">
+          <!-- 第二名 -->
+          <div class="text-center">
+            <div class="w-14 h-14 rounded-2xl mx-auto mb-2 flex items-center justify-center text-2xl" style="background: ${leaders[1].color}33; border: 2px solid ${leaders[1].color};">
+              ${leaders[1].avatar}
+            </div>
+            <div class="w-8 h-8 rounded-full mx-auto mb-1 flex items-center justify-center font-display font-bold text-sm" style="background: linear-gradient(135deg, #94a3b8, #64748b); color: white;">2</div>
+            <p class="text-xs font-medium">${leaders[1].name}</p>
+            <p class="text-xs" style="color: var(--text-muted);">${leaders[1].xp} XP</p>
+          </div>
+          <!-- 第一名 -->
+          <div class="text-center -mt-4">
+            <div class="w-5 h-5 mx-auto mb-1"><i class="fa-solid fa-crown" style="color: #f59e0b;"></i></div>
+            <div class="w-18 h-18 rounded-2xl mx-auto mb-2 flex items-center justify-center text-3xl" style="width: 72px; height: 72px; background: ${leaders[0].color}33; border: 3px solid ${leaders[0].color}; box-shadow: 0 0 20px ${leaders[0].color}44;">
+              ${leaders[0].avatar}
+            </div>
+            <div class="w-9 h-9 rounded-full mx-auto mb-1 flex items-center justify-center font-display font-bold text-sm" style="background: linear-gradient(135deg, #f59e0b, #f97316); color: white;">1</div>
+            <p class="text-sm font-bold">${leaders[0].name}</p>
+            <p class="text-xs" style="color: var(--text-muted);">${leaders[0].xp} XP</p>
+          </div>
+          <!-- 第三名 -->
+          <div class="text-center">
+            <div class="w-14 h-14 rounded-2xl mx-auto mb-2 flex items-center justify-center text-2xl" style="background: ${leaders[2].color}33; border: 2px solid ${leaders[2].color};">
+              ${leaders[2].avatar}
+            </div>
+            <div class="w-8 h-8 rounded-full mx-auto mb-1 flex items-center justify-center font-display font-bold text-sm" style="background: linear-gradient(135deg, #d97706, #92400e); color: white;">3</div>
+            <p class="text-xs font-medium">${leaders[2].name}</p>
+            <p class="text-xs" style="color: var(--text-muted);">${leaders[2].xp} XP</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 列表 -->
+      <div class="px-5 space-y-2">
+        ${leaders.slice(3).map((l, i) => `
+          <div class="glass-sm p-3 flex items-center gap-3">
+            <span class="w-8 text-center font-display font-bold text-sm" style="color: var(--text-muted);">${i + 4}</span>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style="background: ${l.color}33;">
+              ${l.avatar}
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-medium">${l.name}</p>
+              <p class="text-xs" style="color: var(--text-muted);">${t('level')} ${l.level}</p>
+            </div>
+            <span class="font-display font-bold text-sm" style="color: var(--accent);">${l.xp} XP</span>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- 当前用户 -->
+      <div class="px-5 mt-4 mb-4">
+        <div class="glass p-4 flex items-center gap-3" style="border: 2px solid var(--accent); background: rgba(6,182,212,0.08);">
+          <span class="w-8 text-center font-display font-bold text-sm" style="color: var(--accent);">${userRank}</span>
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style="background: ${avatar.color}33; border: 2px solid ${avatar.color};">
+            ${avatar.emoji}
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-bold" style="color: var(--accent);">${u.name} (You)</p>
+            <p class="text-xs" style="color: var(--text-muted);">${t('level')} ${u.level}</p>
+          </div>
+          <span class="font-display font-bold text-sm" style="color: var(--accent);">${u.xp + u.level * 100} XP</span>
+        </div>
+      </div>
+
+      ${renderBottomNav('leaderboard')}
+    </div>
+  `;
+}
+
+// ============================================
+// 个人资料
+// ============================================
+function renderProfile() {
+  const u = State.user;
+  const avatar = Avatars.find(a => a.id === u.avatar) || Avatars[0];
+  const accuracy = u.totalQuestions > 0 ? Math.round((u.totalCorrect / u.totalQuestions) * 100) : 0;
+  const xpNeeded = getXpForLevel(u.level);
+
+  return `
+    <div class="safe-top safe-bottom">
+      <!-- 头部 -->
+      <div class="px-5 pt-6 pb-4 text-center">
+        <div class="w-24 h-24 rounded-3xl mx-auto mb-4 flex items-center justify-center text-4xl"
+             style="background: ${avatar.color}33; border: 3px solid ${avatar.color}; box-shadow: 0 0 30px ${avatar.color}33;">
+          ${avatar.emoji}
+        </div>
+        <h1 class="font-display text-2xl font-bold mb-0.5">${u.name}</h1>
+        <p class="text-sm" style="color: var(--text-muted);">${u.age} years old${u.className ? ' · ' + u.className : ''}</p>
+        <div class="flex items-center justify-center gap-4 mt-3">
+          <span class="px-3 py-1 rounded-full text-xs font-medium" style="background: rgba(124,58,237,0.2); color: #7c3aed;">
+            <i class="fa-solid fa-bolt mr-1"></i>${t('level')} ${u.level}
+          </span>
+          <span class="px-3 py-1 rounded-full text-xs font-medium" style="background: rgba(245,158,11,0.2); color: #f59e0b;">
+            <i class="fa-solid fa-coins mr-1"></i>${u.coins} ${t('coins')}
+          </span>
+          <span class="px-3 py-1 rounded-full text-xs font-medium" style="background: rgba(239,68,68,0.2); color: #ef4444;">
+            <i class="fa-solid fa-fire mr-1"></i>${u.streak || 0} ${t('streak')}
+          </span>
+        </div>
+      </div>
+
+      <!-- XP进度 -->
+      <div class="px-5 mb-5">
+        <div class="glass-sm p-4">
+          <div class="flex justify-between mb-1.5">
+            <span class="text-sm font-medium">${t('level')} ${u.level}</span>
+            <span class="text-xs" style="color: var(--text-muted);">${u.xp}/${xpNeeded} XP</span>
+          </div>
+          <div class="h-3 rounded-full overflow-hidden" style="background: var(--glass);">
+            <div class="progress-fill h-full rounded-full" style="width: ${(u.xp / xpNeeded) * 100}%; background: linear-gradient(90deg, #7c3aed, #06b6d4);"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 统计 -->
+      <div class="px-5 mb-5">
+        <h2 class="font-display font-semibold text-base mb-3">${t('stats')}</h2>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="glass-sm p-4 text-center">
+            <i class="fa-solid fa-gamepad text-lg mb-2" style="color: #06b6d4;"></i>
+            <p class="font-display font-bold text-xl">${u.totalGames || 0}</p>
+            <p class="text-xs" style="color: var(--text-muted);">${t('totalGames')}</p>
+          </div>
+          <div class="glass-sm p-4 text-center">
+            <i class="fa-solid fa-check-circle text-lg mb-2" style="color: #10b981;"></i>
+            <p class="font-display font-bold text-xl">${u.totalCorrect || 0}</p>
+            <p class="text-xs" style="color: var(--text-muted);">${t('correctAnswers')}</p>
+          </div>
+          <div class="glass-sm p-4 text-center">
+            <i class="fa-solid fa-bullseye text-lg mb-2" style="color: #f59e0b;"></i>
+            <p class="font-display font-bold text-xl">${accuracy}%</p>
+            <p class="text-xs" style="color: var(--text-muted);">${t('accuracy')}</p>
+          </div>
+          <div class="glass-sm p-4 text-center">
+            <i class="fa-solid fa-ranking-star text-lg mb-2" style="color: #ec4899;"></i>
+            <p class="font-display font-bold text-xl">#${Math.max(1, 20 - u.level)}</p>
+            <p class="text-xs" style="color: var(--text-muted);">${t('rank')}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 快速操作 -->
+      <div class="px-5 space-y-2 mb-5">
+        <button onclick="navigate('rewards')" class="glass-sm p-4 flex items-center gap-3 w-full text-left card-hover">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(245,158,11,0.2);">
+            <i class="fa-solid fa-trophy" style="color: #f59e0b;"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium">${t('rewards')}</p>
+            <p class="text-xs" style="color: var(--text-muted);">${(u.badges || []).length} ${t('badges')}</p>
+          </div>
+          <i class="fa-solid fa-chevron-right text-sm" style="color: var(--text-muted);"></i>
+        </button>
+        <button onclick="navigate('certificates')" class="glass-sm p-4 flex items-center gap-3 w-full text-left card-hover">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(124,58,237,0.2);">
+            <i class="fa-solid fa-certificate" style="color: #7c3aed;"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium">${t('certificates')}</p>
+            <p class="text-xs" style="color: var(--text-muted);">View your achievements</p>
+          </div>
+          <i class="fa-solid fa-chevron-right text-sm" style="color: var(--text-muted);"></i>
+        </button>
+        <button onclick="navigate('parent_dashboard')" class="glass-sm p-4 flex items-center gap-3 w-full text-left card-hover">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(6,182,212,0.2);">
+            <i class="fa-solid fa-users" style="color: #06b6d4;"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium">${t('parentDashboard')}</p>
+            <p class="text-xs" style="color: var(--text-muted);">Monitor learning progress</p>
+          </div>
+          <i class="fa-solid fa-chevron-right text-sm" style="color: var(--text-muted);"></i>
+        </button>
+        <button onclick="navigate('settings')" class="glass-sm p-4 flex items-center gap-3 w-full text-left card-hover">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass);">
+            <i class="fa-solid fa-gear" style="color: var(--text-muted);"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-medium">${t('settings')}</p>
+            <p class="text-xs" style="color: var(--text-muted);">App preferences</p>
+          </div>
+          <i class="fa-solid fa-chevron-right text-sm" style="color: var(--text-muted);"></i>
+        </button>
+      </div>
+
+      <!-- 头像自定义 -->
+      <div class="px-5 mb-5">
+        <h2 class="font-display font-semibold text-base mb-3">${t('avatar')}</h2>
+        <div class="grid grid-cols-6 gap-2">
+          ${Avatars.map(a => `
+            <div onclick="changeAvatar('${a.id}')" class="w-12 h-12 rounded-xl flex items-center justify-center text-xl cursor-pointer transition-all hover:scale-110"
+                 style="background: ${a.id === u.avatar ? a.color + '33' : 'var(--glass)'}; border: 2px solid ${a.id === u.avatar ? a.color : 'transparent'};">
+              ${a.emoji}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      ${renderBottomNav('profile')}
+    </div>
+  `;
+}
+
+function changeAvatar(id) {
+  State.user.avatar = id;
+  saveUserData(State.user);
+  AudioSystem.click();
+  render();
+}
+
+// ============================================
+// 奖励页面
+// ============================================
+function renderRewards() {
+  const u = State.user;
+  const userBadges = u.badges || [];
+
+  return `
+    <div class="safe-top safe-bottom">
+      <div class="flex items-center gap-3 px-5 py-3">
+        <button onclick="navigate('profile')" class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--glass); border: 1px solid var(--card-border);">
+          <i class="fa-solid fa-arrow-left text-sm"></i>
+        </button>
+        <h1 class="font-display font-bold text-lg flex-1">${t('rewards')}</h1>
+      </div>
+
+      <!-- 统计 -->
+      <div class="flex gap-3 px-5 mb-5">
+        <div class="flex-1 glass-sm p-3 text-center">
+          <p class="font-display font-bold text-xl" style="color: #f59e0b;">${userBadges.length}</p>
+          <p class="text-xs" style="color: var(--text-muted);">${t('badges')} ${t('earned')}</p>
+        </div>
+        <div class="flex-1 glass-sm p-3 text-center">
+          <p class="font-display font-bold text-xl" style="color: #7c3aed;">${u.coins}</p>
+          <p class="text-xs" style="color: var(--text-muted);">${t('coins')}</p>
+        </div>
+        <div class="flex-1 glass-sm p-3 text-center">
+          <p class="font-display font-bold text-xl" style="color: #ef4444;">${u.streak || 0}</p>
+          <p class="text-xs" style="color: var(--text-muted);">Day ${t('streak')}</p>
+        </div>
+      </div>
+
+      <!-- 连击奖励 -->
+      <div class="px-5 mb-5">
+        <h2 class="font-display font-semibold text-base mb-3">${t('streak')} ${t('rewards')}</h2>
+        <div class="scroll-x flex gap-2 pb-1">
+          ${[3, 7, 14, 30, 60, 100].map(d => {
+            const earned = (u.streak || 0) >= d;
+            return `
+              <div class="flex-shrink-0 glass-sm p-3 text-center ${earned ? '' : 'opacity-50'}" style="min-width: 80px;">
+                <div class="w-10 h-10 rounded-xl mx-auto mb-1.5 flex items-center justify-center" style="background: ${earned ? 'rgba(16,185,129,0.2)' : 'var(--glass)'};">
+                  <i class="fa-solid ${earned ? 'fa-check' : 'fa-fire'}" style="color: ${earned ? '#10b981' : '#ef4444'};"></i>
+                </div>
+                <p class="font
