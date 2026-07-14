@@ -24,10 +24,32 @@
                 }
             }
         }
-    </script>
-   <style>
+    </script><style>
+        /* Force Light Theme on Tailwind classes */
+        section, div, nav, footer, header, main {
+            background-color: #FBFBFA !important;
+            color: #1E2530 !important;
+        }
+        /* Cards and Glass effects background reset */
+        .glass, .glass-card, [class*="glass"] {
+            background: rgba(255, 255, 255, 0.8) !important;
+            color: #1E2530 !important;
+            border-color: rgba(30, 37, 48, 0.08) !important;
+        }
+        /* Text Color Fixes */
+        p, span, h1, h2, h3, h4, h5, h6, a, li, label {
+            color: #1E2530 !important;
+        }
+        /* Highlight/Gold color should stay Gold */
+        .text-gradient, .text-gradient-subtle, [class*="gold"], [class*="yellow"], span.text-gold {
+            background: linear-gradient(135deg, #1E2530 0%, #D4AF37 60%, #AA7C11 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            color: transparent !important;
+        }
+
         ::selection { background: #D4AF37; color: #FFFFFF; }
-        body { font-family: 'Inter', sans-serif; background: #FBFBFA; color: #1E2530; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background: #FBFBFA !important; color: #1E2530 !important; overflow-x: hidden; }
         .font-display { font-family: 'Playfair Display', serif; }
 
         /* Scrollbar */
@@ -35,11 +57,9 @@
         ::-webkit-scrollbar-track { background: #FBFBFA; }
         ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 3px; }
 
-        /* Luxury Light Glass */
-        .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border: 1px solid rgba(30,37,48,0.06); }
-        .glass-nav { background: rgba(251,251,250,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(30,37,48,0.06); }
-        .glass-card { background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); border: 1px solid rgba(30,37,48,0.06); transition: all 500ms cubic-bezier(0.16,1,0.3,1); box-shadow: 0 4px 30px rgba(0,0,0,0.02); }
-        .glass-card:hover { background: #FFFFFF; border-color: rgba(212,175,55,0.4); transform: translateY(-4px); box-shadow: 0 30px 60px -15px rgba(212,175,55,0.12); }
+        /* Luxury Light Glass for hover effects */
+        .glass-card { transition: all 500ms cubic-bezier(0.16,1,0.3,1); box-shadow: 0 4px 30px rgba(0,0,0,0.02); }
+        .glass-card:hover { background: #FFFFFF !important; border-color: rgba(212,175,55,0.4) !important; transform: translateY(-4px); box-shadow: 0 30px 60px -15px rgba(212,175,55,0.12); }
 
         /* Reveal Animation */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
@@ -61,17 +81,13 @@
         .stagger-children .reveal:nth-child(7) { transition-delay: 600ms; }
         .stagger-children .reveal:nth-child(8) { transition-delay: 700ms; }
 
-        /* Luxury text gradient */
-        .text-gradient { background: linear-gradient(135deg, #1E2530 0%, #D4AF37 60%, #AA7C11 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .text-gradient-subtle { background: linear-gradient(to right, #1E2530, #64748B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-
         /* Glow */
         .glow-gold { box-shadow: 0 10px 40px rgba(212,175,55,0.12), 0 0 80px rgba(212,175,55,0.04); }
         .glow-dot { box-shadow: 0 0 10px rgba(212,175,55,0.6); }
 
         /* Skill bar */
-        .skill-bar { height: 6px; background: rgba(30,37,48,0.06); border-radius: 3px; overflow: hidden; }
-        .skill-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #D4AF37, #F3E5AB); transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(0.16,1,0.3,1); }
+        .skill-bar { height: 6px; background: rgba(30,37,48,0.06) !important; border-radius: 3px; overflow: hidden; }
+        .skill-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #D4AF37, #F3E5AB) !important; transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(0.16,1,0.3,1); }
         .skill-fill.active { transform: scaleX(1); }
 
         /* Floating animation */
@@ -89,12 +105,12 @@
         .cursor-blink { animation: blink 1s step-end infinite; }
 
         /* Nav link underline */
-        .nav-link { position: relative; color: #4A5568; }
+        .nav-link { position: relative; color: #4A5568 !important; }
         .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: #D4AF37; transition: width 300ms ease; }
         .nav-link:hover::after, .nav-link.active-link::after { width: 100%; }
 
         /* Mobile menu */
-        .mobile-menu { transform: translateX(100%); background: #FBFBFA; transition: transform 400ms cubic-bezier(0.16,1,0.3,1); }
+        .mobile-menu { transform: translateX(100%); background: #FBFBFA !important; transition: transform 400ms cubic-bezier(0.16,1,0.3,1); }
         .mobile-menu.open { transform: translateX(0); }
 
         /* Toast */
@@ -102,11 +118,11 @@
         .toast.show { transform: translateY(0); opacity: 1; }
 
         /* Timeline */
-        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, transparent, rgba(212,175,55,0.4), rgba(212,175,55,0.4), transparent); }
+        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, transparent, rgba(212,175,55,0.4), rgba(212,175,55,0.4), transparent) !important; }
         @media (min-width: 768px) { .timeline-line { left: 50%; transform: translateX(-1px); } }
 
         /* Project image overlay (Luxury Light Blend) */
-        .project-overlay { background: linear-gradient(to top, rgba(251,251,250,0.98) 0%, rgba(251,251,250,0.3) 60%, transparent 100%); }
+        .project-overlay { background: linear-gradient(to top, rgba(251,251,250,0.98) 0%, rgba(251,251,250,0.3) 60%, transparent 100%) !important; }
 
         /* Button shine */
         .btn-shine { position: relative; overflow: hidden; }
