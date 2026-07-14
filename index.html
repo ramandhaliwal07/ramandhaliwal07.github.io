@@ -26,20 +26,20 @@
         }
     </script>
    <style>
-        ::selection { background: #D4AF37; color: #FFFFFF; }
-        body { font-family: 'Inter', sans-serif; background: #FBFBFA; color: #1E2530; overflow-x: hidden; }
+        ::selection { background: #D4AF37; color: #0B1120; }
+        body { font-family: 'Inter', sans-serif; background: #080C17; color: #F8FAFC; overflow-x: hidden; }
         .font-display { font-family: 'Playfair Display', serif; }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #FBFBFA; }
+        ::-webkit-scrollbar-track { background: #080C17; }
         ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 3px; }
 
-        /* Luxury Light Glass */
-        .glass { background: rgba(255,255,255,0.7); backdrop-filter: blur(12px); border: 1px solid rgba(30,37,48,0.06); }
-        .glass-nav { background: rgba(251,251,250,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(30,37,48,0.06); }
-        .glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(30,37,48,0.06); transition: all 500ms cubic-bezier(0.16,1,0.3,1); box-shadow: 0 4px 30px rgba(0,0,0,0.02); }
-        .glass-card:hover { background: #FFFFFF; border-color: rgba(212,175,55,0.4); transform: translateY(-4px); box-shadow: 0 30px 60px -15px rgba(212,175,55,0.12); }
+        /* Glass */
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+        .glass-nav { background: rgba(11,17,32,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); transition: all 500ms cubic-bezier(0.16,1,0.3,1); }
+        .glass-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(212,175,55,0.3); transform: translateY(-4px); box-shadow: 0 25px 50px -12px rgba(212,175,55,0.08); }
 
         /* Reveal Animation */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16,1,0.3,1); }
@@ -61,17 +61,17 @@
         .stagger-children .reveal:nth-child(7) { transition-delay: 600ms; }
         .stagger-children .reveal:nth-child(8) { transition-delay: 700ms; }
 
-        /* Luxury text gradient */
-        .text-gradient { background: linear-gradient(135deg, #1E2530 0%, #D4AF37 60%, #AA7C11 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .text-gradient-subtle { background: linear-gradient(to right, #1E2530, #64748B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        /* Hero text gradient */
+        .text-gradient { background: linear-gradient(135deg, #FFFFFF 0%, #D4AF37 50%, #E8CC6E 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .text-gradient-subtle { background: linear-gradient(to right, #FFFFFF, #94A3B8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
         /* Glow */
-        .glow-gold { box-shadow: 0 10px 40px rgba(212,175,55,0.12), 0 0 80px rgba(212,175,55,0.04); }
-        .glow-dot { box-shadow: 0 0 10px rgba(212,175,55,0.6); }
+        .glow-gold { box-shadow: 0 0 30px rgba(212,175,55,0.15), 0 0 60px rgba(212,175,55,0.05); }
+        .glow-dot { box-shadow: 0 0 10px rgba(212,175,55,0.5); }
 
         /* Skill bar */
-        .skill-bar { height: 6px; background: rgba(30,37,48,0.06); border-radius: 3px; overflow: hidden; }
-        .skill-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #D4AF37, #F3E5AB); transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(0.16,1,0.3,1); }
+        .skill-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+        .skill-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #D4AF37, #E8CC6E); transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(0.16,1,0.3,1); }
         .skill-fill.active { transform: scaleX(1); }
 
         /* Floating animation */
@@ -89,12 +89,12 @@
         .cursor-blink { animation: blink 1s step-end infinite; }
 
         /* Nav link underline */
-        .nav-link { position: relative; color: #4A5568; }
+        .nav-link { position: relative; }
         .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: #D4AF37; transition: width 300ms ease; }
         .nav-link:hover::after, .nav-link.active-link::after { width: 100%; }
 
         /* Mobile menu */
-        .mobile-menu { transform: translateX(100%); background: #FBFBFA; transition: transform 400ms cubic-bezier(0.16,1,0.3,1); }
+        .mobile-menu { transform: translateX(100%); transition: transform 400ms cubic-bezier(0.16,1,0.3,1); }
         .mobile-menu.open { transform: translateX(0); }
 
         /* Toast */
@@ -102,44 +102,19 @@
         .toast.show { transform: translateY(0); opacity: 1; }
 
         /* Timeline */
-        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, transparent, rgba(212,175,55,0.4), rgba(212,175,55,0.4), transparent); }
+        .timeline-line { position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, transparent, rgba(212,175,55,0.3), rgba(212,175,55,0.3), transparent); }
         @media (min-width: 768px) { .timeline-line { left: 50%; transform: translateX(-1px); } }
 
-        /* Project image overlay (Luxury Light Blend) */
-        .project-overlay { background: linear-gradient(to top, rgba(251,251,250,0.98) 0%, rgba(251,251,250,0.3) 60%, transparent 100%); }
+        /* Project image overlay */
+        .project-overlay { background: linear-gradient(to top, rgba(8,12,23,0.95) 0%, rgba(8,12,23,0.4) 50%, transparent 100%); }
 
         /* Button shine */
         .btn-shine { position: relative; overflow: hidden; }
-        .btn-shine::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(transparent, rgba(255,255,255,0.3), transparent); transform: rotate(45deg) translateX(-100%); transition: transform 600ms; }
+        .btn-shine::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(transparent, rgba(255,255,255,0.1), transparent); transform: rotate(45deg) translateX(-100%); transition: transform 600ms; }
         .btn-shine:hover::after { transform: rotate(45deg) translateX(100%); }
 
         /* Counter */
         .counter { font-variant-numeric: tabular-nums; }
-
-        /* ====================================================
-           Tuhada nawa CSS code (Force Light Theme)
-           ==================================================== */
-        section, div, nav, footer, header, main {
-            background-color: #FBFBFA !important;
-            color: #1E2530 !important;
-        }
-        /* Cards and Glass effects background reset */
-        .glass, .glass-card, [class*="glass"] {
-            background: rgba(255, 255, 255, 0.8) !important;
-            color: #1E2530 !important;
-            border-color: rgba(30, 37, 48, 0.08) !important;
-        }
-        /* Text Color Fixes */
-        p, span, h1, h2, h3, h4, h5, h6, a, li, label {
-            color: #1E2530 !important;
-        }
-        /* Highlight/Gold color should stay Gold */
-        .text-gradient, .text-gradient-subtle, [class*="gold"], [class*="yellow"], span.text-gold {
-            background: linear-gradient(135deg, #1E2530 0%, #D4AF37 60%, #AA7C11 100%) !important;
-            -webkit-background-clip: text !important;
-            -webkit-text-fill-color: transparent !important;
-            color: transparent !important;
-        }
     </style>
 </head>
 <body>
