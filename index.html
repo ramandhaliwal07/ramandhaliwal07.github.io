@@ -716,31 +716,74 @@
                 <!-- Contact Form -->
                 <div class="lg:col-span-3 reveal-right">
                     <form id="contactForm" class="glass-card rounded-2xl p-8 md:p-10 space-y-6">
-                        <input type="hidden" name="access_key" value="a0876723-7e8c-44bc-99c4-b7ac5daa31e5">
-                        <div class="grid sm:grid-cols-2 gap-6">
-                            <div>
-                                <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Your Name</label>
-                                <input type="text" id="formName" required placeholder="John Doe" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300">
-                            </div>
-                            <div>
-                                <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Your Email</label>
-                                <input type="email" id="formEmail" required placeholder="john@example.com" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Subject</label>
-                            <input type="text" id="formSubject" required placeholder="How can I help you?" class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300">
-                        </div>
-                        <div>
-                            <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Message</label>
-                            <textarea id="formMessage" required rows="5" placeholder="Write your message here..." class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300 resize-none"></textarea>
-                        </div>
-                        <button type="submit" id="submitBtn" class="btn-shine w-full bg-gold text-dark-900 py-4 rounded-xl text-sm font-semibold uppercase tracking-[0.15em] hover:bg-gold-light transition-all duration-300 flex items-center justify-center gap-2">
-                            <span id="btnText">Send Message</span>
-                            <i class="bi bi-send" id="btnIcon"></i>
-                            <div id="btnSpinner" class="hidden w-5 h-5 border-2 border-dark-900/30 border-t-dark-900 rounded-full animate-spin"></div>
-                        </button>
-                    </form>
+
+    <input type="hidden" name="access_key" value="a0876723-7e8c-44bc-99c4-b7ac5daa31e5">
+
+    <input type="hidden" name="from_name" value="Raman Portfolio Website">
+
+    <div class="grid sm:grid-cols-2 gap-6">
+
+        <div>
+            <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Your Name</label>
+
+            <input
+                type="text"
+                id="formName"
+                name="name"
+                required
+                placeholder="John Doe"
+                class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300">
+        </div>
+
+        <div>
+            <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Your Email</label>
+
+            <input
+                type="email"
+                id="formEmail"
+                name="email"
+                required
+                placeholder="john@example.com"
+                class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300">
+        </div>
+
+    </div>
+
+    <div>
+        <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Subject</label>
+
+        <input
+            type="text"
+            id="formSubject"
+            name="subject"
+            required
+            placeholder="How can I help you?"
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300">
+    </div>
+
+    <div>
+        <label class="text-xs text-slate-500 uppercase tracking-wider block mb-2">Message</label>
+
+        <textarea
+            id="formMessage"
+            name="message"
+            required
+            rows="5"
+            placeholder="Write your message here..."
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3.5 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/20 transition-all duration-300 resize-none"></textarea>
+    </div>
+
+    <button type="submit" id="submitBtn" class="btn-shine w-full bg-gold text-dark-900 py-4 rounded-xl text-sm font-semibold uppercase tracking-[0.15em] hover:bg-gold-light transition-all duration-300 flex items-center justify-center gap-2">
+
+        <span id="btnText">Send Message</span>
+
+        <i class="bi bi-send" id="btnIcon"></i>
+
+        <div id="btnSpinner" class="hidden w-5 h-5 border-2 border-dark-900/30 border-t-dark-900 rounded-full animate-spin"></div>
+
+    </button>
+
+</form>
                 </div>
             </div>
         </div>
@@ -962,51 +1005,49 @@
         });
 
         // ---- Contact Form ----
-        const contactForm = document.getElementById('contactForm');
-        const btnText = document.getElementById('btnText');
-        const btnIcon = document.getElementById('btnIcon');
-        const btnSpinner = document.getElementById('btnSpinner');
-        const submitBtn = document.getElementById('submitBtn');
+       const contactForm = document.getElementById("contactForm");
+const btnText = document.getElementById("btnText");
+const btnIcon = document.getElementById("btnIcon");
+const btnSpinner = document.getElementById("btnSpinner");
+const submitBtn = document.getElementById("submitBtn");
 
-        contactForm.addEventListener("submit", async (e) => {
+contactForm.addEventListener("submit", async function (e) {
 
-e.preventDefault();
+    e.preventDefault();
 
-btnText.textContent = "Sending...";
-btnSpinner.classList.remove("hidden");
-btnIcon.classList.add("hidden");
+    btnText.textContent = "Sending...";
+    btnSpinner.classList.remove("hidden");
+    btnIcon.classList.add("hidden");
+    submitBtn.disabled = true;
 
-const formData = new FormData(contactForm);
+    const formData = new FormData(contactForm);
 
-const response = await fetch("https://api.web3forms.com/submit",{
+    const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+    });
 
-method:"POST",
+    const result = await response.json();
 
-body:formData
+    btnText.textContent = "Send Message";
+    btnSpinner.classList.add("hidden");
+    btnIcon.classList.remove("hidden");
+    submitBtn.disabled = false;
 
-});
-
-const result = await response.json();
-
-btnText.textContent="Send Message";
-
-btnSpinner.classList.add("hidden");
-
-btnIcon.classList.remove("hidden");
-
-if(result.success){
-
-contactForm.reset();
-
-showToast("Message Sent!","Your message has been sent.","success");
-
-}
-
-else{
-
-showToast("Error","Message not sent.","error");
-
-}
+    if (result.success) {
+        contactForm.reset();
+        showToast(
+            "Message Sent!",
+            "Your message has been sent successfully.",
+            "success"
+        );
+    } else {
+        showToast(
+            "Error",
+            "Message could not be sent.",
+            "error"
+        );
+    }
 
 });
         // ---- Toast ----
